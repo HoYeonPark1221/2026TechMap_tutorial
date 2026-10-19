@@ -1,6 +1,6 @@
 name: Preview DocC on a personal fork
 
-# Builds and publishes the tutorial_v2 branch to the Pages site of a *personal*
+# Builds and publishes the tutorial_v2 and tutorial/cindy branches to the Pages site of a *personal*
 # copy of this repository, so the organization's live site stays untouched.
 #
 # The guard below means this never runs on the organization repository, even
@@ -9,7 +9,7 @@ name: Preview DocC on a personal fork
 
 on:
   push:
-    branches: [tutorial_v2]
+    branches: [tutorial_v2, tutorial/cindy]
   workflow_dispatch:
 
 permissions:
