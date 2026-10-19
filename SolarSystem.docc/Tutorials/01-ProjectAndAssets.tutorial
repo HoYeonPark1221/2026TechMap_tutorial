@@ -1,4 +1,6 @@
 @Tutorial(time: 15, projectFiles: "SolarSystem-Assets.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
     @Intro(title: "프로젝트와 에셋 준비하기") {
         새 visionOS 앱을 만들고, 태양과 여덟 행성 모델·별 배경·조명 이미지를 프로젝트에
         연결합니다.
@@ -10,8 +12,10 @@
     @Section(title: "새 visionOS 앱 만들기") {
         @ContentAndMedia {
             Xcode 26 이상에서 시작합니다. 앱 템플릿이 만들어 주는 기본 파일 가운데
-            `ContentView.swift`와 `ImmersiveView.swift`는 이 튜토리얼에서 쓰지 않으므로
-            나중에 지웁니다.
+            `ContentView.swift`, `ImmersiveView.swift`, `AppModel.swift`,
+            `ToggleImmersiveSpaceButton.swift`는 이 튜토리얼에서 쓰지 않습니다. 뒤의 둘은
+            3·4챕터에서 같은 이름으로 직접 만들기 때문에, 남겨 두면 `Invalid
+            redeclaration` 오류가 납니다. 네 개를 이 섹션에서 한꺼번에 지웁니다.
 
             최소 배포 대상은 **visionOS 26.0**입니다. 3챕터에서 쓰는 `SpatialContainer`와
             `depthAlignment`가 visionOS 26부터 제공되기 때문입니다.
@@ -41,9 +45,25 @@
                 프로젝트 안에 `Model`, `Entities`, `Systems`, `RealityViews`,
                 `Solar System` 폴더를 만듭니다. 이후 챕터에서 파일을 여기에 나눠 담습니다.
                 @Image(source: "diagram-assets-folder.svg", alt: "다섯 개의 폴더로 나뉜 프로젝트 구조")
+            }
 
-                템플릿이 만든 `ContentView.swift`와 `ImmersiveView.swift`는 지웁니다.
-                대신 4챕터에서 `SwitchWindows`와 `SolarSystem`을 직접 만듭니다.
+            @Step {
+                템플릿이 만든 `ContentView.swift`, `ImmersiveView.swift`,
+                `AppModel.swift`, `ToggleImmersiveSpaceButton.swift` 네 개를 선택해
+                **Move to Trash**로 지웁니다. 지운 자리는 `AppModel`과 `SwitchWindows`
+                (3챕터), `SolarSystem`과 `ToggleImmersiveSpaceButton`(4챕터)이
+                대신합니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "템플릿 기본 파일을 지운 뒤의 프로젝트 구조")
+            }
+
+            @Step {
+                방금 지운 두 뷰를 `SolarSystemApp.swift`가 아직 참조하고 있으므로, 그
+                내용을 창 하나만 띄우는 최소 형태로 바꿉니다. 4챕터에서 이 파일을 다시
+                열어 조각들을 이어 붙입니다.
+                @Code(name: "SolarSystemApp.swift", file: "01-01-SolarSystemApp.swift")
+
+                이 단계를 건너뛰면 다음 섹션 마지막의 빌드가
+                `Cannot find 'ContentView' in scope`로 실패합니다.
             }
         }
     }
@@ -109,7 +129,8 @@
                 @Image(source: "xcode-package-linked.png", alt: "패키지가 앱 타깃에 연결된 것을 확인하는 화면")
 
                 `No such module 'WorldAssets'`가 나오면 패키지 제품이 앱 타깃에
-                연결되어 있는지 확인하세요.
+                연결되어 있는지 확인하세요. 여기서 빌드가 깨끗하게 끝나야 다음으로
+                넘어갑니다.
             }
         }
     }
@@ -120,7 +141,8 @@
             들어 있습니다. 설정값과 문구만 담겨 새로 배울 개념이 없는 파일들이라, 한 줄씩
             따라 쓰지 않고 그대로 받아 씁니다.
 
-            지금 미리 받아 두면 이후 챕터에서 코드를 쓸 때마다 빌드가 통과합니다.
+            이 파일들은 다음 챕터에서 직접 만들 `PlanetEntity`를 참조하므로, 지금
+            옮겨 두면 2챕터를 끝낼 때 전체 빌드가 처음으로 통과합니다.
 
             @Image(source: "diagram-assets-folder.svg", alt: "폴더별로 나뉜 함께 쓰는 파일 목록")
         }
@@ -135,11 +157,15 @@
 
             @Step {
                 `Model`, `Entities`, `Systems`, `RealityViews`, `Solar System` 폴더의
-                내용을 프로젝트의 같은 이름 폴더로 옮깁니다.
+                내용을 프로젝트의 같은 이름 폴더로 옮깁니다. 단 `Solar
+                System/SolarSystemControls.swift` **하나만 빼 두세요.** 이 파일은
+                4챕터에서 만드는 `ToggleImmersiveSpaceButton`을 쓰기 때문에, 지금 넣으면
+                2·3챕터 내내 빌드가 깨집니다. 4챕터에서 다시 꺼내 씁니다.
                 @Image(source: "diagram-package-location.svg", alt: "폴더 구조를 그대로 옮긴 모습")
 
-                이 상태에서는 아직 빌드되지 않습니다. `PlanetEntity`, `AppModel` 같은
-                파일을 다음 챕터부터 직접 만들기 때문입니다.
+                이 상태에서는 아직 빌드되지 않습니다. 방금 옮긴 파일들이 2챕터에서 만들
+                `PlanetEntity`와 `RotationComponent`를 참조하기 때문입니다. 2챕터를
+                끝내면 통과합니다.
             }
         }
     }

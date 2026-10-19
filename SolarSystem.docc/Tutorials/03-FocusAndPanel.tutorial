@@ -1,4 +1,6 @@
 @Tutorial(time: 30, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
     @Intro(title: "보고, 집고, 불러오기") {
         행성을 바라보고 손가락을 맞대면 그 행성이 앞으로 다가와 설명 패널과 나란히
         서도록 만듭니다.
@@ -59,6 +61,12 @@
 
                 이래야 궤도선이나 배경을 집었을 때 반응하지 않습니다.
             }
+
+            @Step {
+                **Command + B**로 빌드합니다. 2챕터 끝에 이어 두 번째로 통과하는
+                지점입니다. 이 섹션에서 파일 네 개를 새로 만들었으니, 여기서 한 번
+                걸러 두면 남은 네 섹션에서 나올 오류와 섞이지 않습니다.
+            }
         }
     }
 
@@ -101,6 +109,11 @@
 
                 무대로 옮기는 것은 `equatorialPlane`입니다. 자전축 기울기를 그대로 가져가되
                 공전과 궤도 거리에서는 떨어져 나오게 하려는 것입니다.
+            }
+
+            @Step {
+                **Command + B**로 빌드합니다. `FocusStage`와 `PlanetEntity`의 변경이
+                서로 맞물리는 자리라, 한쪽 시그니처만 어긋나도 여기서 바로 드러납니다.
             }
         }
     }
@@ -159,6 +172,12 @@
                 `focusedPlanetID == nil` 조건이 핵심입니다. 이미 포커스 중에 이전/다음
                 버튼을 누를 때마다 무대가 따라다니면 행성이 매번 다른 자리에서 나타납니다.
             }
+
+            @Step {
+                **Command + B**로 빌드합니다. 몰입 공간 쪽 코드는 여기서 끝이라, 이번이
+                마지막으로 깨끗하게 통과하는 지점입니다. 다음 섹션부터는 4챕터에서
+                채워질 자리를 참조하기 시작합니다.
+            }
         }
     }
 
@@ -194,6 +213,17 @@
 
                 `depthAlignment`는 뷰가 아니라 `Layout` 프로토콜을 따르는 값에만 걸 수
                 있습니다. 그래서 `HStack`이 아니라 `HStackLayout`입니다.
+            }
+
+            @Step {
+                지금 빌드하면 `Cannot find 'SolarSystemControls' in scope`가 납니다.
+                정상입니다. `SwitchWindows`가 쓰는 `SolarSystemControls`는 1챕터에서
+                일부러 빼 둔 파일이고, 그 파일이 다시 필요로 하는
+                `ToggleImmersiveSpaceButton`을 4챕터 첫 섹션에서 만듭니다. 거기서 둘을
+                한꺼번에 넣으면 다시 통과합니다.
+
+                이 오류 **하나만** 남아 있는지 확인하세요. 다른 오류가 함께 보인다면 그건
+                이 섹션에서 만든 두 파일의 문제이므로 지금 잡고 넘어갑니다.
             }
         }
     }

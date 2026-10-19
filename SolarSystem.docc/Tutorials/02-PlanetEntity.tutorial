@@ -1,4 +1,6 @@
 @Tutorial(time: 20, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
     @Intro(title: "행성 엔티티 만들기") {
         행성 하나는 두 가지로 동시에 움직입니다. 태양 주위를 도는 공전과, 기울어진 축을
         중심으로 제자리에서 도는 자전입니다.
@@ -42,7 +44,18 @@
                 @Code(name: "RotationSystem.swift", file: "02-03-RotationSystem.swift", previousFile: "02-02-RotationSystem.swift")
 
                 이 시스템은 아직 동작하지 않습니다. 직접 만든 시스템은 앱 시작 시 한 번
-                등록해야 하는데, 그 코드는 3챕터의 `@main` 진입점에서 작성합니다.
+                등록해야 하는데, 그 코드는 4챕터의 `@main` 진입점에서 작성합니다.
+            }
+
+            @Step {
+                `RotationSystem.swift`를 연 채로 **Product ▸ Perform Action ▸ Compile
+                "RotationSystem.swift"**(⌃⌘B)를 실행해, 방금 쓴 파일만 따로
+                컴파일해 봅니다.
+
+                전체 빌드는 아직 통과하지 않습니다. 1챕터에서 옮겨 둔
+                `PlanetEntity+Configuration.swift`가 다음 섹션에서 만들 `PlanetEntity`를
+                기다리고 있기 때문입니다. 파일 단위 컴파일은 그 영향을 받지 않으므로,
+                오타는 지금 바로 잡을 수 있습니다.
             }
         }
     }
@@ -112,6 +125,17 @@
 
                 여덟 행성의 크기·궤도·속도 설정값은 내려받은 파일의
                 `PlanetEntity+Configuration.swift`에 들어 있습니다.
+            }
+
+            @Step {
+                **Command + B**로 전체를 빌드합니다. 이번에는 통과해야 합니다. 1챕터에서
+                옮겨 둔 파일들이 기다리던 `PlanetEntity`와 `RotationComponent`가 이제
+                모두 갖춰졌기 때문입니다.
+
+                화면에는 아직 아무것도 나오지 않습니다. 이 엔티티를 띄우는 뷰는 3챕터에서
+                만듭니다. 여기서 오류가 남아 있다면 3챕터로 넘어가지 말고 먼저
+                해결하세요. 다음 챕터는 다섯 섹션으로 가장 길어서, 지금 놓친 오류가
+                거기까지 쌓입니다.
             }
         }
     }

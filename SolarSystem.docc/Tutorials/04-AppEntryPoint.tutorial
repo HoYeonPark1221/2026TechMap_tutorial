@@ -1,4 +1,6 @@
 @Tutorial(time: 15, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
     @Intro(title: "하나의 앱으로 조립하기") {
         지금까지 만든 조각들은 서로를 직접 알지 못합니다. `PlanetEntity`도 `Planet`도
         `SwitchWindows`도, 누가 자신을 화면에 올리는지 모릅니다.
@@ -48,6 +50,16 @@
                 여기 쓰는 `model.immersiveSpaceID`는 다음 섹션에서 선언할
                 `ImmersiveSpace(id:)`와 반드시 같은 값이어야 합니다.
             }
+
+            @Step {
+                1챕터에서 빼 두었던 `SolarSystemControls.swift`를 이제 프로젝트의
+                `Solar System` 폴더로 옮깁니다. 이 파일이 기다리던
+                `ToggleImmersiveSpaceButton`을 방금 만들었습니다.
+
+                **Command + B**로 빌드합니다. 3챕터 마지막에 남겨 둔
+                `Cannot find 'SolarSystemControls' in scope`가 사라지고 전체가 통과해야
+                합니다.
+            }
         }
     }
 
@@ -65,9 +77,9 @@
 
         @Steps {
             @Step {
-                `SolarSystemApp.swift`에서 `@main`이 붙은 `App` 구조체를 만들고,
-                `WindowGroup` 안에 `SwitchWindows`만 배치합니다.
-                @Code(name: "SolarSystemApp.swift", file: "04-04-SolarSystemApp.swift")
+                1챕터에서 창 하나만 띄워 두었던 `SolarSystemApp.swift`를 다시 엽니다.
+                `WindowGroup` 안의 자리 표시용 `Text`를 `SwitchWindows`로 바꿉니다.
+                @Code(name: "SolarSystemApp.swift", file: "04-04-SolarSystemApp.swift", previousFile: "01-01-SolarSystemApp.swift")
 
                 아직 `AppModel`을 주입하지 않아, 이 상태로 빌드하면 환경값을 찾지 못해
                 실행 중에 멈춥니다.
