@@ -1,13 +1,14 @@
-import RealityKit
 import SwiftUI
-import WorldAssets
 
 @main
 struct SolarSystemApp: App {
 
     var body: some SwiftUI.Scene {
         WindowGroup {
-            SwitchWindows()
+            Text("Solar System")
+                .font(.extraLargeTitle)
+                .padding(40)
+                .glassBackgroundEffect()
         }
         .windowStyle(.plain)
      }

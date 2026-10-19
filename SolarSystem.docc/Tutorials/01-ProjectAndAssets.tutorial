@@ -1,20 +1,22 @@
 @Tutorial(time: 15, projectFiles: "SolarSystem-Assets.zip") {
     @Intro(title: "프로젝트와 에셋 준비하기") {
-        새 visionOS 앱을 만들고, 태양과 여덟 행성 모델·별 배경·조명 이미지를 프로젝트에
-        연결합니다.
+        새 visionOS 앱을 만들고, 이 튜토리얼에서 쓰지 않을 템플릿 파일을 정리한 뒤 행성 모델
+        패키지와 이미지를 연결합니다.
 
-        이 챕터에서는 코드를 쓰지 않습니다. 하지만 다음 챕터부터 쓰는 모든 코드가 여기서
-        연결한 에셋 이름을 그대로 참조하므로, 반드시 먼저 끝내야 합니다.
+        이 챕터에서 쓰는 코드는 임시 진입점 하나뿐입니다. 챕터가 끝나면 빌드와 실행이 모두
+        통과하는 깨끗한 출발점이 생기고, 다음 챕터부터는 여기에 조각을 하나씩 더해 갑니다.
     }
 
-    @Section(title: "새 visionOS 앱 만들기") {
+    @Section(title: "새 visionOS 앱 만들고 템플릿 정리하기") {
         @ContentAndMedia {
-            Xcode 26 이상에서 시작합니다. 앱 템플릿이 만들어 주는 기본 파일 가운데
-            `ContentView.swift`와 `ImmersiveView.swift`는 이 튜토리얼에서 쓰지 않으므로
-            나중에 지웁니다.
+            Xcode 26 이상에서 시작합니다. 최소 배포 대상은 **visionOS 26.0**입니다. 5챕터에서
+            쓰는 `SpatialContainer`와 `depthAlignment(_:)`가 visionOS 26부터 제공되기
+            때문입니다.
 
-            최소 배포 대상은 **visionOS 26.0**입니다. 3챕터에서 쓰는 `SpatialContainer`와
-            `depthAlignment`가 visionOS 26부터 제공되기 때문입니다.
+            visionOS 앱 템플릿은 `ContentView`, `ImmersiveView`, `AppModel`,
+            `ToggleImmersiveSpaceButton` 파일을 만들어 줍니다. 이 튜토리얼은 이 네 파일을
+            모두 직접 다시 만들기 때문에, **처음에 한꺼번에 지우고** 진입점을 비워 둡니다.
+            남겨 두면 나중에 같은 이름의 파일을 만들 때 이름이 충돌해 빌드가 실패합니다.
 
             @Image(source: "xcode-new-project-template.png", alt: "Xcode의 새 프로젝트 템플릿 선택 화면")
         }
@@ -33,37 +35,56 @@
                 Minimum Deployments**가 **visionOS 26.0 이상**인지 확인합니다.
                 @Image(source: "xcode-new-project-options.png", alt: "제품 이름과 초기 장면, 몰입 공간 방식을 고르는 화면")
 
-                여기서 고른 값은 `Info.plist`의 초기 몰입 스타일일 뿐입니다. 실제 스타일은
-                4챕터에서 `immersionStyle(selection:in:)`으로 `.full`을 지정해 결정합니다.
+                여기서 고른 `Mixed`는 `Info.plist`의 초기 값일 뿐입니다. 실제 몰입 스타일은
+                2챕터에서 코드로 `.full`을 지정합니다.
+            }
+
+            @Step {
+                프로젝트 내비게이터에서 템플릿이 만든 `ContentView.swift`,
+                `ImmersiveView.swift`, `AppModel.swift`, `ToggleImmersiveSpaceButton.swift`를
+                선택하고 **Delete ▸ Move to Trash**로 지웁니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "템플릿 파일을 지우고 남은 프로젝트 구조")
+
+                `AppModel`과 `ToggleImmersiveSpaceButton`은 2챕터에서, `ImmersiveView`
+                대신 `SolarSystem`을 2챕터에서, `ContentView` 대신 `SwitchWindows`를
+                5챕터에서 직접 만듭니다.
+            }
+
+            @Step {
+                남은 `SolarSystemApp.swift`는 방금 지운 `ContentView`와 `ImmersiveView`를
+                참조하고 있어서 이대로는 빌드되지 않습니다. 파일 내용을 전부 지우고, 글자
+                하나만 띄우는 임시 진입점으로 바꿉니다.
+                @Code(name: "SolarSystemApp.swift", file: "01-01-SolarSystemApp.swift")
+
+                이 파일은 2챕터에서 몰입 공간을, 3챕터에서 시스템 등록을, 5챕터에서 최종
+                창을 더하며 계속 고쳐 씁니다.
             }
 
             @Step {
                 프로젝트 안에 `Model`, `Entities`, `Systems`, `RealityViews`,
                 `Solar System` 폴더를 만듭니다. 이후 챕터에서 파일을 여기에 나눠 담습니다.
                 @Image(source: "diagram-assets-folder.svg", alt: "다섯 개의 폴더로 나뉜 프로젝트 구조")
-
-                템플릿이 만든 `ContentView.swift`와 `ImmersiveView.swift`는 지웁니다.
-                대신 4챕터에서 `SwitchWindows`와 `SolarSystem`을 직접 만듭니다.
             }
         }
     }
 
     @Section(title: "모델 패키지와 이미지 연결하기") {
         @ContentAndMedia {
-            이 페이지 위쪽의 **Project files** 버튼에서 `SolarSystem-Assets.zip`을
-            내려받아 압축을 풉니다. 약 304MB입니다.
+            이 페이지 위쪽의 **Project files** 버튼에서 `SolarSystem-Assets.zip`(약 300MB)을
+            내려받아 압축을 풉니다. 안의 `README.txt`에 각 파일을 어디에 둘지 정리되어
+            있습니다.
 
-            안에는 로컬 Swift 패키지 `WorldAssets`(태양·지구·달·인공위성·나머지 일곱 행성
-            모델), 조명용 `Sunlight.skybox`, 이미지 세 개가 들어 있습니다.
+            로컬 Swift 패키지 `WorldAssets`(태양·지구·달·인공위성·나머지 일곱 행성 모델),
+            조명용 `Sunlight.skybox`, 이미지 세 개가 들어 있습니다.
 
             @Image(source: "diagram-asset-bundle.svg", alt: "내려받은 폴더 안에 패키지와 이미지가 들어 있는 모습")
         }
 
         @Steps {
             @Step {
-                Finder에서 `SolarSystem.xcodeproj`가 있는 프로젝트 폴더를 열고, 그 안에
-                `Packages` 폴더를 만듭니다. 내려받은 `WorldAssets` 폴더 전체를 그리로
-                복사합니다.
+                Finder에서 `SolarSystem.xcodeproj`가 있는 프로젝트 폴더를 엽니다. 템플릿이
+                만든 `Packages` 폴더(안에 `RealityKitContent`가 있습니다)에 내려받은
+                `WorldAssets` 폴더 전체를 복사합니다.
                 @Image(source: "diagram-package-location.svg", alt: "프로젝트 폴더 아래 Packages 폴더에 패키지가 놓인 구조")
 
                 최종 위치는 `프로젝트 폴더/Packages/WorldAssets/Package.swift`입니다.
@@ -83,8 +104,8 @@
                 **SolarSystem** 앱 타깃으로 지정해 추가합니다.
                 @Image(source: "xcode-package-target.png", alt: "패키지 제품을 앱 타깃에 추가하는 화면")
 
-                이후 코드에서 `import WorldAssets`와 `worldAssetsBundle`을 씁니다. 이
-                패키지에는 `SunPositionSystem`도 들어 있습니다.
+                이후 코드에서 `import WorldAssets`로 모델을 불러옵니다. 이 패키지에는
+                지구의 낮·밤을 계산하는 `SunPositionSystem`도 들어 있습니다.
             }
 
             @Step {
@@ -93,58 +114,57 @@
                 넣습니다.
                 @Image(source: "xcode-assets-starfield.png", alt: "에셋 카탈로그에 별 배경 이미지를 추가한 화면")
 
-                이름을 정확히 맞춰야 합니다. `Starfield`는 별 배경이,
-                `SolarSystem`과 `SolarBackground`는 창 카드가 이름으로 찾아 씁니다.
+                이름을 정확히 맞춰야 합니다. 코드가 이 이름으로 이미지를 찾습니다.
             }
 
             @Step {
-                내려받은 `Resources/Sunlight.skybox` 폴더를 프로젝트의 `Resources`
-                폴더로 끌어다 놓고, **Add to targets**에서 **SolarSystem**을 체크합니다.
+                내려받은 `Resources/Sunlight.skybox` 폴더를 프로젝트로 끌어다 놓고,
+                **Add to targets**에서 **SolarSystem**을 체크합니다.
                 @Image(source: "diagram-asset-bundle.svg", alt: "조명 이미지가 프로젝트 리소스에 추가된 모습")
             }
 
             @Step {
-                실행 대상을 **Apple Vision Pro 시뮬레이터**로 고르고 **Command + B**로
-                빌드합니다. 오류 없이 끝나면 준비가 끝났습니다.
+                **확인하기.** 실행 대상을 **Apple Vision Pro** 시뮬레이터로 고르고
+                **Command + B**로 빌드한 뒤, **Command + R**로 실행합니다. 공중에
+                "Solar System"이라고 쓴 유리 창 하나가 뜨면 준비가 끝났습니다.
                 @Image(source: "xcode-package-linked.png", alt: "패키지가 앱 타깃에 연결된 것을 확인하는 화면")
 
-                `No such module 'WorldAssets'`가 나오면 패키지 제품이 앱 타깃에
-                연결되어 있는지 확인하세요.
-            }
-        }
-    }
-
-    @Section(title: "함께 쓰는 파일 배치하기") {
-        @ContentAndMedia {
-            다음 챕터부터 나오는 **Project files**에는 `SolarSystem-SupportFiles.zip`이
-            들어 있습니다. 설정값과 문구만 담겨 새로 배울 개념이 없는 파일들이라, 한 줄씩
-            따라 쓰지 않고 그대로 받아 씁니다.
-
-            지금 미리 받아 두면 이후 챕터에서 코드를 쓸 때마다 빌드가 통과합니다.
-
-            @Image(source: "diagram-assets-folder.svg", alt: "폴더별로 나뉜 함께 쓰는 파일 목록")
-        }
-
-        @Steps {
-            @Step {
-                2챕터 페이지의 **Project files**에서 `SolarSystem-SupportFiles.zip`을
-                내려받아 압축을 풉니다. 안의 `README.txt`에 어떤 파일을 직접 쓰고 어떤
-                파일을 받아 쓰는지 정리되어 있습니다.
-                @Image(source: "diagram-asset-bundle.svg", alt: "압축을 푼 함께 쓰는 파일 폴더")
-            }
-
-            @Step {
-                `Model`, `Entities`, `Systems`, `RealityViews`, `Solar System` 폴더의
-                내용을 프로젝트의 같은 이름 폴더로 옮깁니다.
-                @Image(source: "diagram-package-location.svg", alt: "폴더 구조를 그대로 옮긴 모습")
-
-                이 상태에서는 아직 빌드되지 않습니다. `PlanetEntity`, `AppModel` 같은
-                파일을 다음 챕터부터 직접 만들기 때문입니다.
+                `Cannot find 'ContentView' in scope`가 나오면 앞 섹션의 진입점 교체를,
+                `No such module 'WorldAssets'`가 나오면 패키지가 앱 타깃에 연결되어 있는지
+                확인하세요.
             }
         }
     }
 
     @Assessments {
+        @MultipleChoice {
+            템플릿의 `ContentView.swift`와 `ImmersiveView.swift`만 지우고 바로 빌드하면 어떻게 되나요?
+
+            @Choice(isCorrect: false) {
+                아무 문제 없이 빌드됩니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    템플릿의 `SolarSystemApp.swift`가 두 뷰를 이름으로 참조하고 있습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                `SolarSystemApp.swift`가 지운 뷰를 찾지 못해 빌드가 실패합니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    그래서 파일을 지우는 것과 동시에 진입점을 임시 코드로 바꿔야 합니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                빌드는 되지만 실행하면 빈 화면이 나옵니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    없는 타입을 참조하는 것은 실행 전 컴파일 단계에서 걸립니다.
+                }
+            }
+        }
+
         @MultipleChoice {
             최소 배포 대상을 visionOS 26.0 이상으로 맞춰야 하는 이유는 무엇인가요?
 
@@ -157,10 +177,10 @@
             }
 
             @Choice(isCorrect: true) {
-                `SpatialContainer`와 `depthAlignment` 같은 Spatial Layout API가 visionOS 26부터 제공되기 때문입니다.
+                `SpatialContainer`와 `depthAlignment(_:)` 같은 Spatial Layout API가 visionOS 26부터 제공되기 때문입니다.
 
                 @Justification(reaction: "맞습니다!") {
-                    3챕터에서 창 UI를 만들 때 이 API들을 씁니다. 배포 대상이 낮으면 그 코드가 컴파일되지 않습니다.
+                    5챕터에서 창 UI를 만들 때 이 API들을 씁니다. 배포 대상이 낮으면 그 코드가 컴파일되지 않습니다.
                 }
             }
 

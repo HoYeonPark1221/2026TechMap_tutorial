@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="세 컴포넌트를 붙인 엔티티에 시선과 핀치가 SpatialTapGesture로 전달되는 흐름도">
+  <style>
+    .box { fill: #1f2937; stroke: #4b5563; stroke-width: 1.5; }
+    .comp { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; }
+    .sys { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; }
+    .ok { fill: #14352a; stroke: #10b981; stroke-width: 1.5; }
+    .name { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .small { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .role { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .link { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    .arrow { stroke: #9ca3af; stroke-width: 1.5; fill: none; marker-end: url(#tip); }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/></marker></defs>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+  <text class="title" x="24" y="30">시선 + 핀치가 엔티티에 닿기까지</text>
+
+  <rect class="box" x="24" y="56" width="180" height="70" rx="10"/>
+  <text class="name" x="40" y="84">바라보기</text>
+  <text class="role" x="40" y="106">시선이 엔티티에 닿음</text>
+  <rect class="box" x="24" y="146" width="180" height="70" rx="10"/>
+  <text class="name" x="40" y="174">손가락 맞대기</text>
+  <text class="role" x="40" y="196">핀치 = 탭</text>
+
+  <rect class="box" x="236" y="56" width="380" height="226" rx="10"/>
+  <text class="name" x="252" y="82">selectionTarget</text>
+  <text class="role" x="252" y="100">보이지 않는 입력 전용 엔티티</text>
+  <rect class="comp" x="252" y="114" width="348" height="34" rx="8"/>
+  <text class="small" x="266" y="136">CollisionComponent</text>
+  <text class="role" x="440" y="136">시선이 맞을 모양</text>
+  <rect class="comp" x="252" y="156" width="348" height="34" rx="8"/>
+  <text class="small" x="266" y="178">InputTargetComponent</text>
+  <text class="role" x="440" y="178">입력을 받겠다는 표시</text>
+  <rect class="comp" x="252" y="198" width="348" height="34" rx="8"/>
+  <text class="small" x="266" y="220">HoverEffectComponent</text>
+  <text class="role" x="440" y="220">바라볼 때 하이라이트</text>
+  <rect class="sys" x="252" y="240" width="348" height="34" rx="8"/>
+  <text class="small" x="266" y="262">PlanetSelectionComponent</text>
+  <text class="role" x="470" y="262">어느 행성인지</text>
+
+  <path class="arrow" d="M 204 91 L 232 120"/>
+  <path class="arrow" d="M 204 181 L 232 170"/>
+
+  <rect class="ok" x="236" y="306" width="380" height="70" rx="10"/>
+  <text class="name" x="252" y="332">SpatialTapGesture()</text>
+  <text class="small" x="252" y="356">.targetedToAnyEntity()</text>
+  <path class="arrow" d="M 426 282 L 426 302"/>
+  <text class="role" x="24" y="300">셋 중 하나라도 빠지면</text>
+  <text class="role" x="24" y="318">아무 반응이 없습니다.</text>
+</svg>

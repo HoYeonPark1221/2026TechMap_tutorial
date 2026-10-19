@@ -1,0 +1,286 @@
+@Tutorial(time: 35, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @Intro(title: "보고, 집고, 불러오기") {
+        **핵심 개념 2.** 행성을 바라보고 손가락을 맞대면 그 행성이 눈앞으로 다가와 설명
+        패널과 나란히 서도록 만듭니다.
+
+        visionOS의 공간 입력은 세 단계로 이어집니다. 엔티티가 입력을 **받을 수 있게** 하고,
+        들어온 입력이 **어느 엔티티인지** 알아내고, 그 결과로 엔티티를 **움직입니다**.
+        섹션마다 실행해 하나씩 확인합니다.
+    }
+
+    @Section(title: "개념: 시선과 핀치를 받는 엔티티") {
+        @ContentAndMedia {
+            visionOS에서는 손이나 눈을 추적하는 코드를 쓰지 않습니다. 사용자가 어디를
+            보는지는 개인정보라서 앱에 전달되지도 않습니다. 대신 엔티티에 컴포넌트 세 개를
+            붙이면 시스템이 시선 하이라이트와 핀치를 처리해 결과만 알려 줍니다.
+
+            - `CollisionComponent`: 시선 광선이 맞을 **모양**입니다.
+            - `InputTargetComponent`: 이 엔티티가 입력을 **받겠다는** 표시입니다.
+            - `HoverEffectComponent`: 바라볼 때 켜지는 **하이라이트**입니다. 시스템이 그려
+              주므로 앱은 시선 위치를 몰라도 됩니다.
+
+            셋 중 하나라도 빠지면 반응하지 않습니다. 탭 결과는 SwiftUI의
+            `SpatialTapGesture`가 `targetedToAnyEntity()`로 "어떤 엔티티를 탭했는지"와 함께
+            전달합니다.
+
+            @Image(source: "diagram-spatial-input.svg", alt: "세 컴포넌트를 붙인 엔티티에 시선과 핀치가 SpatialTapGesture로 전달되는 흐름도")
+        }
+
+        @Steps {
+            @Step {
+                Project files의 `Chapter4` 폴더 안 `Model`, `Solar System` 폴더 내용을
+                프로젝트의 같은 이름 폴더로 끌어다 놓습니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "Chapter4 폴더의 파일을 같은 이름 폴더로 옮기는 모습")
+
+                설명 패널 `PlanetInfoPanel`과 머리 위치를 읽는 `HeadTracker`입니다. 이번에는
+                옮긴 직후에도 빌드가 통과합니다.
+            }
+
+            @Step {
+                `Entities` 폴더에 `PlanetSelectionComponent.swift`를 만듭니다. 탭이 들어왔을
+                때 "어느 행성인지" 되찾기 위한 꼬리표 역할의 컴포넌트입니다.
+                @Code(name: "PlanetSelectionComponent.swift", file: "04-01-PlanetSelectionComponent.swift")
+
+                3챕터의 `RotationComponent`처럼 값만 담습니다. 이번에는 시스템 대신 제스처가
+                이 값을 읽습니다.
+            }
+
+            @Step {
+                `PlanetEntity`에 보이지 않는 `selectionTarget` 엔티티를 추가하고, 꼬리표와
+                입력용 컴포넌트 세 개를 붙입니다. 바뀐 부분만 표시했습니다.
+                @Code(name: "PlanetEntity.swift", file: "04-02-PlanetEntity.swift")
+
+                모델에 직접 붙이지 않고 별도 엔티티로 두는 이유는, 지구의 `EarthEntity`가
+                하위 엔티티에 자체 콜라이더를 갖고 있어 그쪽이 탭을 먼저 가로채기
+                때문입니다. `rotator`의 자식이므로 행성을 따라다닙니다.
+            }
+
+            @Step {
+                `AppModel`에 "지금 선택된 행성"을 담을 `focusedPlanetID`를 추가합니다.
+                @Code(name: "AppModel.swift", file: "04-03-AppModel.swift", previousFile: "03-09-AppModel.swift")
+            }
+
+            @Step {
+                `Planet`에 `SpatialTapGesture`를 붙입니다. `targetedToAnyEntity()`로 어떤
+                엔티티든 받은 뒤, 우리가 붙인 꼬리표가 있는지로 걸러냅니다.
+                @Code(name: "Planet.swift", file: "04-04-Planet.swift", previousFile: "03-10-Planet.swift")
+
+                이렇게 걸러야 궤도선이나 다른 엔티티를 집었을 때 반응하지 않습니다.
+            }
+
+            @Step {
+                **확인하기.** **Command + R**로 실행합니다. 시뮬레이터에서 행성 위에 포인터를
+                올리면(기기에서는 바라보면) 행성 둘레가 밝아집니다. `HoverEffectComponent`가
+                그려 주는 하이라이트입니다.
+                @Image(source: "app-solarsystem.png", alt: "궤도를 도는 행성 가운데 하나가 시선 하이라이트로 밝아진 화면")
+
+                하이라이트가 안 보이면 세 컴포넌트가 모두 붙었는지 확인하세요. 탭하면
+                `focusedPlanetID`가 바뀌지만, 화면에 보이는 변화는 다음 섹션에서 만듭니다.
+            }
+        }
+    }
+
+    @Section(title: "부모를 바꿔 행성 불러오기") {
+        @ContentAndMedia {
+            선택된 행성은 궤도 어디에 있든 늘 같은 자리, 같은 크기로 나타나야 합니다. 그래서
+            행성을 공용 무대 엔티티로 옮기는데, 그냥 옮기면 순간이동해 버립니다.
+
+            `addChild(_:preservingWorldTransform: true)`는 부모만 바꾸고 화면상 위치는
+            그대로 둡니다. 그다음 `move(to:relativeTo:duration:)`로 목적지까지 이어 주면,
+            행성이 있던 자리에서 무대까지 자연스럽게 날아옵니다.
+
+            @Image(source: "app-focus-mars.png", alt: "행성 하나가 궤도에서 빠져나와 정면으로 확대된 화면")
+        }
+
+        @Steps {
+            @Step {
+                `RealityViews` 폴더에 `FocusStage.swift`를 만듭니다. 선택된 행성과 패널이
+                모여드는, 장면에 단 하나뿐인 무대입니다.
+                @Code(name: "FocusStage.swift", file: "04-05-FocusStage.swift")
+
+                전체 몰입 공간에는 기본 조명이 없습니다. 유일한 광원인 태양이 무대 훨씬 뒤에
+                있어서, 보는 사람 쪽에서 비추는 키 라이트를 따로 답니다.
+            }
+
+            @Step {
+                `PlanetEntity`에 포커스 상태와 `setFocused(_:stage:animated:)`를 추가합니다.
+                부모를 바꾼 뒤 목표 위치로 0.6초에 걸쳐 이동시키고, 포커스 중에는 공전
+                컴포넌트의 속도를 0으로 둡니다.
+                @Code(name: "PlanetEntity.swift", file: "04-06-PlanetEntity.swift")
+
+                무대로 옮기는 것은 `equatorialPlane`입니다. 자전축 기울기와 자전은 그대로
+                가져가고, 공전과 궤도 거리에서만 떨어져 나오게 하려는 것입니다.
+            }
+
+            @Step {
+                `AppModel`에서 한 행성이 선택되면 나머지를 전부 숨깁니다.
+                @Code(name: "AppModel.swift", file: "04-07-AppModel.swift", previousFile: "04-03-AppModel.swift")
+
+                선택된 행성도 `isHidden`이 되지만, 그 행성의 `equatorialPlane`은 이미 무대로
+                옮겨 가서 숨겨진 부모의 영향을 받지 않습니다.
+            }
+
+            @Step {
+                `Planet`이 무대를 받아 `update`에서 `setFocused`를 부르게 합니다.
+                @Code(name: "Planet.swift", file: "04-08-Planet.swift", previousFile: "04-04-Planet.swift")
+            }
+
+            @Step {
+                `SolarSystem`에 `FocusStage`를 놓고, 만들어진 무대를 모든 `Planet`에 나눠
+                줍니다. 포커스 중에는 태양 모델도 숨깁니다.
+                @Code(name: "SolarSystem.swift", file: "04-09-SolarSystem.swift", previousFile: "03-11-SolarSystem.swift")
+            }
+
+            @Step {
+                **확인하기.** 실행해 행성 하나를 탭합니다. 나머지 행성이 사라지고, 탭한 행성이
+                궤도에서 빠져나와 정면으로 커지며 날아오면 성공입니다.
+                @Image(source: "app-focus-mars.png", alt: "탭한 행성이 정면으로 확대되어 날아온 화면")
+
+                아직 되돌아가는 버튼이 없습니다. 확인한 뒤에는 앱을 다시 실행하세요. 다음
+                섹션에서 닫기 버튼이 있는 패널을 붙입니다.
+            }
+        }
+    }
+
+    @Section(title: "SwiftUI 패널을 3차원 공간에 붙이기") {
+        @ContentAndMedia {
+            `RealityView`의 `attachments` 블록에 넣은 SwiftUI 뷰는 엔티티가 되어 3차원
+            좌표에 놓입니다. 버튼까지 그대로 동작하므로 패널을 RealityKit으로 다시 만들
+            필요가 없습니다.
+
+            필요한 감각은 포인트와 미터의 환산입니다. 760포인트 너비의 패널은 공간에서 약
+            0.56미터입니다. 행성 반지름 + 사이 여백 + 패널 절반 너비만큼 옆에 놓아야 둘이
+            겹치지 않습니다. 이 값은 앞에서 `PlanetEntity`에 넣은 `focusPanelOffset`입니다.
+
+            @Image(source: "app-focus-mars.png", alt: "확대된 행성 오른쪽에 유리 재질 설명 패널이 나란히 놓인 화면")
+        }
+
+        @Steps {
+            @Step {
+                `AppModel`에 패널 버튼이 부를 이전·다음·닫기 동작을 추가합니다.
+                @Code(name: "AppModel.swift", file: "04-10-AppModel.swift", previousFile: "04-07-AppModel.swift")
+            }
+
+            @Step {
+                `Planet`에 `attachments` 블록을 더하고, 포커스 상태일 때 패널을 무대에 붙여
+                행성 오른쪽에 놓습니다.
+                @Code(name: "Planet.swift", file: "04-11-Planet.swift", previousFile: "04-08-Planet.swift")
+
+                패널은 행성마다 하나씩 만들어지지만 포커스된 행성의 패널만 보이고 입력을
+                받습니다. `opacity`와 `allowsHitTesting`이 그 역할을 나눠 맡습니다.
+            }
+
+            @Step {
+                **확인하기.** 실행해 행성을 탭하면 오른쪽에 설명 패널이 뜹니다. 화살표로
+                다음 행성으로 넘어가고, **X**로 닫으면 모든 행성이 궤도로 돌아옵니다.
+                @Image(source: "app-focus-mars.png", alt: "확대된 행성 옆에 설명 패널이 떠 있는 화면")
+            }
+        }
+    }
+
+    @Section(title: "시선 정면에 무대 놓기") {
+        @ContentAndMedia {
+            지금은 무대가 `FocusStage`의 고정 좌표에 있습니다. 행성은 태양을 중심으로 7.8미터
+            까지 퍼져 있어서, 바깥쪽 행성을 집으려 몸을 돌린 상태라면 고정 위치의 무대는
+            시야 밖입니다.
+
+            그래서 핀치하는 순간 머리 위치를 읽어 무대를 눈앞으로 옮깁니다. 머리 추적은
+            받아 온 `HeadTracker`가 ARKit으로 처리하므로, 여기서는 그 값으로 무대를 놓는
+            계산만 씁니다.
+
+            @Image(source: "app-focus-mars.png", alt: "바라보던 방향 정면에 행성과 패널이 나타난 화면")
+        }
+
+        @Steps {
+            @Step {
+                `AppModel`에 머리 추적기와 배치 계산을 추가합니다. 4×4 행렬에서 위치는 4번째
+                열, 앞방향은 3번째 열의 부호를 뒤집어 얻습니다. 바뀐 부분만 표시했습니다.
+                @Code(name: "AppModel.swift", file: "04-12-AppModel.swift")
+
+                앞방향의 `y`를 0으로 눌러 수평만 남기는 것이 중요합니다. 이게 없으면 위를
+                올려다보며 핀치할 때 무대가 비스듬히 기웁니다.
+            }
+
+            @Step {
+                `Planet`의 제스처에서, 포커스가 **처음 열릴 때만** 무대를 옮깁니다.
+                @Code(name: "Planet.swift", file: "04-13-Planet.swift", previousFile: "04-11-Planet.swift")
+
+                `focusedPlanetID == nil` 조건이 핵심입니다. 이미 포커스 중에 이전·다음
+                버튼을 누를 때마다 무대가 따라다니면 행성이 매번 다른 자리에서 나타납니다.
+            }
+
+            @Step {
+                `SolarSystem`이 나타날 때 머리 추적을 시작하고, 사라질 때 멈춥니다. ARKit
+                데이터는 몰입 공간이 열려 있는 동안만 들어옵니다.
+                @Code(name: "SolarSystem.swift", file: "04-14-SolarSystem.swift", previousFile: "04-09-SolarSystem.swift")
+            }
+
+            @Step {
+                **확인하기.** 실행해 몸을 돌려 바깥쪽 행성을 탭해 보세요. 무대가 바라보던
+                방향 정면에 나타나면 성공입니다.
+                @Image(source: "app-focus-mars.png", alt: "바라보던 방향 정면에 행성과 패널이 나타난 화면")
+
+                머리 위치를 받지 못하는 환경에서는 `placeFocusStageInFrontOfViewer`가 아무것도
+                하지 않고, 무대는 원래 고정 위치에 나타납니다.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            행성을 바라봐도 하이라이트가 켜지지 않습니다. 가장 먼저 확인할 것은 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                `SpatialTapGesture`가 `Planet`에 붙어 있는지 확인합니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    제스처는 탭 결과를 받는 쪽입니다. 하이라이트는 제스처 없이도 컴포넌트만으로 켜집니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                엔티티에 `CollisionComponent`, `InputTargetComponent`, `HoverEffectComponent`가 모두 붙어 있는지 확인합니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    시선 광선이 맞을 모양, 입력 대상 표시, 하이라이트가 모두 있어야 시스템이 반응합니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                앱이 시선 추적 권한을 요청했는지 확인합니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    시선 위치는 앱에 전달되지 않으며, 하이라이트는 시스템이 그려 주므로 권한이 필요 없습니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `addChild(_:preservingWorldTransform: true)`가 하는 일은 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                자식의 변환을 초기화해 부모의 원점에 붙입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    그것은 `preservingWorldTransform`을 `false`로 두었을 때의 동작에 가깝습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                부모만 바꾸고, 화면상 위치와 방향은 그대로 유지합니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    그래서 옮기는 순간 순간이동이 일어나지 않고, 이어지는 `move(to:)`가 제자리에서 목적지까지 부드럽게 연결합니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                자식을 복제해 두 부모 모두에 붙입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    엔티티의 부모는 언제나 하나뿐이며, 복제도 일어나지 않습니다.
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="SpatialContainer는 뷰를 같은 공간에 겹치고, depthAlignment는 가로로 놓인 뷰의 앞뒤 기준을 맞추는 모습">
+  <style>
+    .box { fill: #1f2937; stroke: #4b5563; stroke-width: 1.5; }
+    .comp { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; }
+    .sys { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; }
+    .ok { fill: #14352a; stroke: #10b981; stroke-width: 1.5; }
+    .name { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .small { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .role { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .link { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    .arrow { stroke: #9ca3af; stroke-width: 1.5; fill: none; marker-end: url(#tip); }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/></marker></defs>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+  <text class="title" x="24" y="30">x · y에 z가 더해진 레이아웃</text>
+
+  <text class="name" x="24" y="66">SpatialContainer</text>
+  <text class="role" x="24" y="86">자식 뷰를 같은 3차원 공간에 겹쳐 둡니다</text>
+  <rect class="comp" x="60" y="112" width="190" height="104" rx="8"/>
+  <text class="small" x="72" y="132">SolarSystemControls</text>
+  <rect class="box" x="96" y="140" width="190" height="104" rx="8"/>
+  <text class="small" x="108" y="230">SolarCard</text>
+  <text class="role" x="24" y="282">alignment: .center</text>
+  <text class="role" x="24" y="300">→ Alignment3D (x, y, z 모두 가운데)</text>
+  <text class="role" x="24" y="318">opacity로 한쪽만 보이게 교차합니다</text>
+
+  <text class="name" x="340" y="66">HStackLayout</text>
+  <text class="name" x="340" y="86">  .depthAlignment(.center)</text>
+  <text class="role" x="340" y="110">위에서 내려다본 모습 (가로 x, 세로 z)</text>
+  <path class="link" d="M 340 182 L 616 182" stroke-dasharray="4 4"/>
+  <text class="role" x="356" y="214">점선 = 깊이 가운데</text>
+  <rect class="sys" x="356" y="170" width="110" height="24" rx="4"/>
+  <text class="small" x="372" y="187">텍스트</text>
+  <rect class="sys" x="486" y="132" width="120" height="100" rx="6"/>
+  <text class="small" x="502" y="224">미리보기</text>
+  <text class="role" x="340" y="262">가로로 놓되, 두께가 다른 뷰들의</text>
+  <text class="role" x="340" y="280">깊이 가운데를 한 기준선에 맞춥니다.</text>
+  <text class="role" x="340" y="298">Layout 값에만 걸 수 있습니다.</text>
+
+  <text class="role" x="24" y="372">두 API 모두 겉모습이 아니라 레이아웃이 계산하는 값을 바꿉니다.</text>
+</svg>

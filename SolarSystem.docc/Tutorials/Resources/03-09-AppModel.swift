@@ -6,6 +6,13 @@ import SwiftUI
 class AppModel {
     let immersiveSpaceID = "SolarSystem"
 
+    enum ImmersiveSpaceState {
+        case closed
+        case inTransition
+        case open
+    }
+    var immersiveSpaceState = ImmersiveSpaceState.closed
+
     var solarEarth: EarthEntity.Configuration = .solarEarthDefault
     var solarSatellite: SatelliteEntity.Configuration = .solarTelescopeDefault
     var solarMoon: SatelliteEntity.Configuration = .solarMoonDefault
@@ -25,23 +32,8 @@ class AppModel {
             var configuration = $0
             configuration.sceneCenter = solarSunPosition
             configuration.presentationTilt = solarSystemTilt
-            configuration.isHidden = focusedPlanetID != nil
             return configuration
         }
-    }
-
-    var focusedPlanetID: PlanetID? = nil
-
-    func focusNext() {
-        focusedPlanetID = (focusedPlanetID ?? .neptune).next
-    }
-
-    func focusPrevious() {
-        focusedPlanetID = (focusedPlanetID ?? .mercury).previous
-    }
-
-    func closeFocus() {
-        focusedPlanetID = nil
     }
 
     let solarSunPosition: SIMD3<Float> = [0, 1.0, -9]

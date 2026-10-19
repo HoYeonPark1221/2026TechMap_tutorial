@@ -74,17 +74,20 @@ assert stamps > 0, "no image references to stamp"
 <body><a href="{escape(target, quote=True)}">SolarSystem 튜토리얼 열기</a></body></html>
 """)
 
-# Preserve links shared before the four-chapter edition.
+# Preserve links shared before the current edition: the original seven-chapter
+# layout, and the four-chapter layout that preceded the concept-first one.
 for old, new in {
     "01-projectsetup": "01-projectandassets",
-    "02-placingplanets": "02-planetentity",
-    "03-planetinfocards": "03-focusandpanel",
-    "02-windowandspace": "04-appentrypoint",
-    "03-sunandlighting": "02-planetentity",
-    "04-planetsinorbit": "02-planetentity",
-    "05-taptofocus": "03-focusandpanel",
-    "06-infopanelandheadplacement": "03-focusandpanel",
-    "07-appentrypoint": "04-appentrypoint",
+    "02-placingplanets": "03-componentandsystem",
+    "03-planetinfocards": "04-spatialinput",
+    "03-sunandlighting": "03-componentandsystem",
+    "04-planetsinorbit": "03-componentandsystem",
+    "05-taptofocus": "04-spatialinput",
+    "06-infopanelandheadplacement": "04-spatialinput",
+    "07-appentrypoint": "05-spatiallayout",
+    "02-planetentity": "03-componentandsystem",
+    "03-focusandpanel": "04-spatialinput",
+    "04-appentrypoint": "05-spatiallayout",
 }.items():
     destination = f"/{base_path}/tutorials/solarsystem/{new}/"
     assert (archive / f"tutorials/solarsystem/{new}/index.html").is_file()

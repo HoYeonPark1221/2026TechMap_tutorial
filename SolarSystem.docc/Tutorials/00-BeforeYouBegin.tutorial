@@ -1,0 +1,107 @@
+@Article(time: 10) {
+    @Intro(title: "시작하기 전에") {
+        코드를 쓰기 전에 준비물과 시뮬레이터 조작법을 확인하고, 이 튜토리얼이 다루는 세 가지
+        개념을 미리 훑어봅니다. 각 개념은 해당 챕터 첫머리에서 다시 자세히 설명합니다.
+    }
+
+    @ContentAndMedia {
+        ## 준비물
+
+        | 항목 | 버전 |
+        | --- | --- |
+        | Mac | Apple silicon (visionOS 시뮬레이터 실행 조건) |
+        | Xcode | 26 이상 |
+        | visionOS SDK · 시뮬레이터 | 26 이상 |
+        | 최소 배포 대상 | visionOS 26.0 |
+
+        **Apple Vision Pro는 없어도 됩니다.** 처음부터 끝까지 Apple Vision Pro
+        시뮬레이터로 따라 할 수 있습니다. 시뮬레이터가 없다면 Xcode의 **Settings ▸
+        Components**에서 visionOS 플랫폼을 내려받으세요.
+
+        5챕터의 `SpatialContainer`와 `depthAlignment(_:)`는 visionOS 26에서 새로 생긴
+        **Spatial Layout** API입니다. Xcode 16 이하에서 열거나 배포 대상을 visionOS 2 이하로
+        두면 컴파일되지 않습니다.
+
+        @Image(source: "xcode-new-project-template.png", alt: "Xcode의 visionOS 앱 템플릿 선택 화면")
+    }
+
+    @ContentAndMedia {
+        ## 시뮬레이터에서 시선과 핀치 다루기
+
+        시뮬레이터에서는 **마우스 포인터가 시선**, **클릭이 핀치**(손가락 맞대기)를 대신합니다.
+
+        - 행성 위에 포인터를 올리면 시선을 둔 것처럼 하이라이트가 켜집니다.
+        - 그 상태에서 클릭하면 핀치로 탭한 것과 같습니다.
+        - 시뮬레이터 창 아래쪽 도구 막대에서 둘러보기·이동 모드로 바꾸면 드래그와 W·A·S·D
+          키로 머리를 돌리거나 걸어 다닐 수 있습니다.
+
+        4챕터 마지막 섹션은 ARKit으로 머리 위치를 읽습니다. 머리 위치를 받지 못하는
+        환경에서는 무대가 기본 위치(정면 약 1.6m)에 그대로 나타날 뿐 앱은 정상 동작합니다.
+
+        @Image(source: "app-solarsystem.png", alt: "시뮬레이터에서 실행한 태양계 몰입 공간")
+    }
+
+    @ContentAndMedia {
+        ## 필요한 사전 지식
+
+        - **Swift**: 구조체와 클래스, 클로저, `async`/`await`를 읽을 수 있으면 됩니다.
+        - **SwiftUI**: `View`, `@State`, `.environment(_:)`로 값을 전달하는 방식을 써 본
+          적이 있으면 충분합니다.
+        - **RealityKit, ARKit, 3D 수학**은 몰라도 됩니다. 필요한 개념은 코드 직전에
+          설명합니다. 처음 보는 단어는 **용어 사전**에서 찾아보세요.
+
+        @Image(source: "diagram-asset-bundle.svg", alt: "튜토리얼에서 쓰는 패키지와 이미지 묶음")
+    }
+
+    @ContentAndMedia {
+        ## 핵심 개념 1 · Component와 System
+
+        RealityKit에서 공간에 놓인 물체는 **엔티티**입니다. 엔티티에 붙는 값 묶음이
+        **컴포넌트**이고, 특정 컴포넌트를 가진 엔티티를 매 프레임 찾아 일하는 코드가
+        **시스템**입니다.
+
+        "초당 몇 라디안으로 돈다"는 값은 `RotationComponent`에 담고, 실제로 돌리는 일은
+        `RotationSystem`이 합니다. 시스템 하나가 컴포넌트를 가진 모든 엔티티를 한꺼번에
+        처리하므로, 행성 여덟 개와 궤도 축 여덟 개를 같은 코드로 움직입니다.
+        **3챕터**에서 다룹니다.
+
+        @Image(source: "diagram-ecs.svg", alt: "엔티티에 붙은 RotationComponent를 RotationSystem이 매 프레임 읽어 회전시키는 관계도")
+    }
+
+    @ContentAndMedia {
+        ## 핵심 개념 2 · 공간 입력
+
+        visionOS에서는 손 추적 코드를 직접 쓰지 않습니다. 엔티티에
+        `CollisionComponent`, `InputTargetComponent`, `HoverEffectComponent`를 붙이면
+        시스템이 시선 하이라이트와 핀치를 알아서 처리하고, SwiftUI의 `SpatialTapGesture`가
+        어떤 엔티티를 탭했는지 알려 줍니다. **4챕터**에서 다룹니다.
+
+        @Image(source: "diagram-spatial-input.svg", alt: "세 컴포넌트를 붙인 엔티티에 시선과 핀치가 SpatialTapGesture로 전달되는 흐름도")
+    }
+
+    @ContentAndMedia {
+        ## 핵심 개념 3 · Spatial Layout
+
+        visionOS 26부터 SwiftUI 레이아웃에 깊이(z)가 들어왔습니다. 정렬 기준은
+        `Alignment3D`가 되고, 뷰를 같은 3차원 공간에 겹치는 `SpatialContainer`와
+        가로·세로 배치의 앞뒤 기준을 정하는 `depthAlignment(_:)`가 생겼습니다.
+        **5챕터**에서 다룹니다.
+
+        @Image(source: "diagram-spatial-layout.svg", alt: "SpatialContainer와 depthAlignment가 깊이 방향 배치를 정하는 모습")
+    }
+
+    @ContentAndMedia {
+        ## 이 튜토리얼을 읽는 법
+
+        - **직접 쓰는 파일과 받는 파일을 나눴습니다.** 세 가지 개념이 담긴 파일만 직접
+          쓰고, 설정값·문구 파일은 각 챕터 첫 단계에서 **Project files**의 `ChapterN`
+          폴더를 옮겨 씁니다.
+        - **긴 파일은 바뀌는 부분만 보여 줍니다.** 코드 안의 `// ... 생략` 주석 자리에는
+          앞 단계에서 쓴 코드가 그대로 있다는 뜻입니다. 지우지 말고 표시된 부분만
+          고치세요.
+        - **섹션이 끝날 때마다 빌드(Command + B)하고, 챕터가 끝나면 실행(Command + R)합니다.**
+          결과가 다르면 Project files의 `Checkpoints/ChapterN` 폴더와 비교하세요.
+
+        @Image(source: "diagram-assets-folder.svg", alt: "기능별로 나뉜 프로젝트 폴더 구조")
+    }
+}

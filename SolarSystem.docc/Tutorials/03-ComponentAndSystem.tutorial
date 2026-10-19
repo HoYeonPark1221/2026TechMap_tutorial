@@ -1,0 +1,273 @@
+@Tutorial(time: 30, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @Intro(title: "Component와 System으로 행성 움직이기") {
+        **핵심 개념 1.** 행성 하나는 두 가지로 동시에 움직입니다. 태양 주위를 도는 공전과,
+        기울어진 축을 중심으로 제자리에서 도는 자전입니다.
+
+        이 움직임을 RealityKit의 **Entity–Component–System(ECS)** 구조로 만듭니다. "얼마나
+        빨리 도는가"는 컴포넌트에 담고, 실제로 돌리는 일은 시스템이 매 프레임 합니다.
+        챕터가 끝나면 여덟 행성이 태양 주위를 도는 모습을 직접 확인합니다.
+    }
+
+    @Section(title: "개념: 값은 컴포넌트에, 일은 시스템에") {
+        @ContentAndMedia {
+            RealityKit에서 **엔티티**는 공간에 놓인 물체이고, 스스로는 아무 행동도 하지
+            않습니다. **컴포넌트**는 엔티티에 붙이는 값 묶음입니다. 모양, 재질, 충돌 영역처럼
+            RealityKit이 제공하는 것도 있고, 직접 만들 수도 있습니다.
+
+            **시스템**은 특정 컴포넌트를 가진 엔티티를 매 프레임 찾아 일하는 코드입니다.
+            엔티티마다 타이머나 애니메이션을 따로 거는 대신, 시스템 하나가 조건에 맞는 모든
+            엔티티를 한꺼번에 처리합니다.
+
+            그래서 회전을 바꾸고 싶을 때 시스템을 건드릴 필요가 없습니다. 엔티티의
+            컴포넌트 값만 바꾸면 다음 프레임부터 시스템이 새 값으로 돌립니다. 이 챕터
+            마지막에서 행성이 정확히 이 방식으로 움직입니다.
+
+            @Image(source: "diagram-ecs.svg", alt: "엔티티에 붙은 RotationComponent를 RotationSystem이 매 프레임 읽어 회전시키는 관계도")
+        }
+
+        @Steps {
+            @Step {
+                `Systems` 폴더에 `RotationSystem.swift`를 만들고, 회전 속도와 축을 담는
+                `RotationComponent`를 정의합니다. `Component` 프로토콜만 따르면 어떤
+                구조체든 컴포넌트가 됩니다.
+                @Code(name: "RotationSystem.swift", file: "03-01-RotationSystem.swift")
+
+                컴포넌트는 값을 들고 있을 뿐 스스로는 아무 일도 하지 않습니다.
+            }
+
+            @Step {
+                같은 파일에 `RotationSystem`을 추가합니다. `EntityQuery`가 이 시스템이
+                상대할 엔티티의 조건, 즉 "`RotationComponent`를 가진 것 전부"를 정의합니다.
+                @Code(name: "RotationSystem.swift", file: "03-02-RotationSystem.swift", previousFile: "03-01-RotationSystem.swift")
+            }
+
+            @Step {
+                `update(context:)`에서 조건에 맞는 엔티티를 훑으며 방향을 조금씩 돌립니다.
+                `context.deltaTime`을 곱해야 프레임레이트가 달라져도 같은 속도로 돕니다.
+                @Code(name: "RotationSystem.swift", file: "03-03-RotationSystem.swift", previousFile: "03-02-RotationSystem.swift")
+
+                `setOrientation(_:relativeTo: entity)`는 지금 방향에서 그만큼 더 돌린다는
+                뜻입니다. 매 프레임 조금씩 더해져 회전이 됩니다.
+            }
+
+            @Step {
+                **확인하기.** **Command + B**로 빌드합니다. 오류 없이 끝나면 다음 섹션으로
+                넘어갑니다. 아직 이 컴포넌트를 가진 엔티티가 없어서 화면에는 변화가 없습니다.
+            }
+        }
+    }
+
+    @Section(title: "빈 엔티티를 층층이 쌓아 공전과 자전 나누기") {
+        @ContentAndMedia {
+            엔티티 하나에는 방향이 하나뿐이라, 공전과 자전을 한 엔티티에 함께 담을 수
+            없습니다. 대신 역할이 하나씩인 빈 엔티티를 부모-자식으로 잇습니다. 부모의 변환은
+            자식에게 누적됩니다.
+
+            바깥부터 공전(`orbitPivot`), 거리(`radiusOffset`), 축 기울기(`equatorialPlane`),
+            자전(`rotator`) 순입니다. `orbitPivot`과 `rotator`에 각각 `RotationComponent`를
+            붙이면, **같은 시스템 하나가** 공전과 자전을 동시에 만들어 냅니다.
+
+            @Image(source: "diagram-planet-hierarchy.svg", alt: "orbitPivot에서 rotator까지 이어지는 엔티티 계층")
+        }
+
+        @Steps {
+            @Step {
+                Project files의 `Chapter3` 폴더 안 `Entities`, `Model`, `Systems`,
+                `RealityViews` 폴더 내용을 프로젝트의 같은 이름 폴더로 끌어다 놓습니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "Chapter3 폴더의 파일을 같은 이름 폴더로 옮기는 모습")
+
+                행성 여덟 개의 설정값(`PlanetEntity+Configuration`), 모델 로딩과 궤도선
+                그리기(`PlanetEntity+Helpers`), 지구·달 엔티티가 들어 있습니다. 모두
+                `PlanetEntity`의 확장이라, **다음 스텝에서 `PlanetEntity`를 만들기 전까지는
+                빌드 오류가 나는 것이 정상**입니다.
+            }
+
+            @Step {
+                `Entities` 폴더에 `PlanetEntity.swift`를 만들고, 역할별 빈 엔티티를
+                선언합니다.
+                @Code(name: "PlanetEntity.swift", file: "03-04-PlanetEntity.swift")
+
+                `id` 대신 `planetID`라는 이름을 쓴 이유는 `Entity`가 이미 재정의할 수 없는
+                `id` 속성을 갖고 있기 때문입니다.
+            }
+
+            @Step {
+                초기화 메서드에서 `addChild`로 네 엔티티를 한 줄로 잇습니다. 이 순서가 곧
+                변환이 누적되는 순서입니다.
+                @Code(name: "PlanetEntity.swift", file: "03-05-PlanetEntity.swift", previousFile: "03-04-PlanetEntity.swift")
+
+                궤도선 `orbitPath`는 `orbitPivot`의 **자식이 아니라 형제**로 둡니다. 자식으로
+                넣으면 궤도선까지 행성과 함께 돌아 버립니다.
+            }
+
+            @Step {
+                각 층의 처음 방향을 정합니다. 태양계 전체의 기울기, 궤도 시작 각도,
+                자전축 기울기입니다. 모두 초기화 때 한 번만 설정합니다.
+                @Code(name: "PlanetEntity.swift", file: "03-06-PlanetEntity.swift", previousFile: "03-05-PlanetEntity.swift")
+
+                궤도 시작 각도를 나중에 다시 쓰면 갱신될 때마다 공전 진행도가 0으로
+                되돌아갑니다. 회전은 이제부터 시스템의 몫입니다.
+            }
+
+            @Step {
+                모델을 불러와 가장 안쪽 `rotator`에 매답니다. 지구만 달과 인공위성을 거느린
+                `EarthEntity`를 쓰고, 나머지 일곱은 `loadPlaceholderModel`로 불러옵니다.
+                @Code(name: "PlanetEntity.swift", file: "03-07-PlanetEntity.swift", previousFile: "03-06-PlanetEntity.swift")
+            }
+
+            @Step {
+                여기가 이 챕터의 핵심입니다. `update(configuration:animateUpdates:)`에서
+                `orbitPivot`에는 공전 속도를, `rotator`에는 자전 속도를 담은
+                `RotationComponent`를 붙입니다. 코드가 길어져 앞부분은 생략했습니다.
+                @Code(name: "PlanetEntity.swift", file: "03-08-PlanetEntity.swift")
+
+                `setRotationSpeed`는 컴포넌트가 이미 있으면 값만 바꿔 다시 넣고, 없으면 새로
+                붙입니다. 컴포넌트는 값 타입이라 꺼내서 고친 뒤 **다시 넣어야** 반영됩니다.
+            }
+
+            @Step {
+                **확인하기.** **Command + B**로 빌드합니다. 앞에서 옮긴 확장 파일들이 이제
+                `PlanetEntity`를 찾아 오류가 모두 사라집니다.
+
+                오류가 남아 있으면 `Checkpoints/Chapter3`의 `PlanetEntity.swift`와
+                비교하세요.
+            }
+        }
+    }
+
+    @Section(title: "장면에 올리고 시스템 등록하기") {
+        @ContentAndMedia {
+            엔티티는 `RealityView`에 추가되어야 화면에 나타나고, 시스템은 **등록**되어야
+            매 프레임 실행됩니다. 직접 만든 시스템은 앱이 시작할 때 `registerSystem()`을 한 번
+            호출해야 합니다.
+
+            등록을 빼먹으면 컴파일도 되고 크래시도 나지 않지만, 행성이 전혀 움직이지
+            않습니다. ECS에서 가장 흔한 실수입니다.
+
+            @Image(source: "app-solarsystem.png", alt: "궤도를 도는 여덟 행성")
+        }
+
+        @Steps {
+            @Step {
+                `AppModel`에 여덟 행성의 설정을 추가합니다. 설정값 자체는 받아 온
+                `PlanetEntity+Configuration`에 있고, 여기서는 태양 위치와 전체 기울기만
+                덧입힙니다.
+                @Code(name: "AppModel.swift", file: "03-09-AppModel.swift", previousFile: "02-01-AppModel.swift")
+            }
+
+            @Step {
+                `RealityViews` 폴더에 `Planet.swift`를 만듭니다. `RealityView`가 행성
+                엔티티를 만들어 장면에 넣고, 설정이 바뀔 때마다 `update`를 부릅니다.
+                @Code(name: "Planet.swift", file: "03-10-Planet.swift")
+            }
+
+            @Step {
+                `SolarSystem`에 행성 여덟 개를 추가합니다.
+                @Code(name: "SolarSystem.swift", file: "03-11-SolarSystem.swift", previousFile: "02-03-SolarSystem.swift")
+            }
+
+            @Step {
+                `SolarSystemApp`에 `init()`을 추가하고 시스템을 등록합니다.
+                `RotationSystem`은 방금 만든 시스템이고, `TraceSystem`과 `SunPositionSystem`은
+                지구의 궤적과 낮·밤을 담당하는 받아 온 시스템입니다.
+                @Code(name: "SolarSystemApp.swift", file: "03-12-SolarSystemApp.swift", previousFile: "02-04-SolarSystemApp.swift")
+            }
+
+            @Step {
+                **확인하기.** **Command + R**로 실행하고 몰입 공간을 엽니다. 여덟 행성이
+                궤도선을 따라 공전하면서 제자리에서 자전하면 성공입니다.
+                @Image(source: "app-solarsystem.png", alt: "궤도를 도는 여덟 행성")
+
+                `RotationSystem.registerSystem()` 한 줄을 주석 처리하고 다시 실행해 보세요.
+                행성이 멈춥니다. 컴포넌트는 그대로인데 그 값을 읽어 줄 시스템이 없기
+                때문입니다. 확인한 뒤 주석을 다시 풉니다.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            행성의 공전 속도를 바꾸려면 무엇을 고쳐야 하나요?
+
+            @Choice(isCorrect: false) {
+                `RotationSystem`의 `update(context:)` 안에 행성별 분기를 추가합니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    시스템은 컴포넌트를 가진 모든 엔티티를 같은 방식으로 처리할 뿐, 특정 행성을 알지 못합니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                `orbitPivot`에 붙은 `RotationComponent`의 `speed` 값을 바꿉니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    값은 컴포넌트에, 일은 시스템에 있습니다. 다음 프레임부터 시스템이 새 값으로 돌립니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `orbitPivot`의 `orientation`을 매 프레임 직접 계산해 넣습니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    그 일을 대신해 주는 것이 바로 `RotationSystem`입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `RotationSystem.registerSystem()`을 빼먹으면 어떤 일이 생기나요?
+
+            @Choice(isCorrect: false) {
+                컴파일 오류가 납니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    등록은 실행 시점의 일이라 컴파일러는 아무 문제를 찾지 못합니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                앱이 시작하자마자 크래시가 납니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    크래시도 나지 않습니다. 그래서 더 찾기 어렵습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                아무 오류 없이 앱이 실행되지만, 행성이 전혀 움직이지 않습니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    시스템이 등록되지 않으면 `RotationComponent`를 아무리 붙여도 그 값을 읽어 줄 코드가 없습니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `orbitPath`를 `orbitPivot`의 자식이 아니라 형제로 둔 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                자식으로 두면 궤도선이 화면에 보이지 않기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    보이지 않는 것이 아니라, 보이되 엉뚱하게 움직입니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                부모가 도는 변환이 자식에게 누적되어, 궤도선까지 행성과 함께 돌아 버리기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    궤도선은 경로 자체를 보여 줘야 하므로 도는 엔티티의 바깥에 둡니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                한 엔티티는 자식을 하나만 가질 수 있기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    엔티티는 자식을 얼마든지 가질 수 있습니다.
+                }
+            }
+        }
+    }
+}

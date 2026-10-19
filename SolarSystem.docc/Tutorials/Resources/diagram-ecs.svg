@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="엔티티에 붙은 RotationComponent를 RotationSystem이 매 프레임 읽어 회전시키는 관계도">
+  <style>
+    .box { fill: #1f2937; stroke: #4b5563; stroke-width: 1.5; }
+    .comp { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; }
+    .sys { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; }
+    .ok { fill: #14352a; stroke: #10b981; stroke-width: 1.5; }
+    .name { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .small { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .role { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .link { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    .arrow { stroke: #9ca3af; stroke-width: 1.5; fill: none; marker-end: url(#tip); }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/></marker></defs>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+  <text class="title" x="24" y="30">Entity · Component · System</text>
+
+  <rect class="box" x="24" y="56" width="268" height="132" rx="10"/>
+  <text class="name" x="40" y="80">orbitPivot</text>
+  <text class="role" x="40" y="98">Entity — 공간에 놓인 물체</text>
+  <rect class="comp" x="40" y="112" width="236" height="60" rx="8"/>
+  <text class="small" x="54" y="134">RotationComponent</text>
+  <text class="role" x="54" y="156">speed 0.4 · axis [0, 1, 0]</text>
+
+  <rect class="box" x="24" y="212" width="268" height="132" rx="10"/>
+  <text class="name" x="40" y="236">rotator</text>
+  <text class="role" x="40" y="254">Entity — 공간에 놓인 물체</text>
+  <rect class="comp" x="40" y="268" width="236" height="60" rx="8"/>
+  <text class="small" x="54" y="290">RotationComponent</text>
+  <text class="role" x="54" y="312">speed 2.0 · axis [0, 1, 0]</text>
+
+  <rect class="sys" x="372" y="150" width="244" height="100" rx="10"/>
+  <text class="name" x="388" y="176">RotationSystem</text>
+  <text class="role" x="388" y="198">System — 매 프레임 실행</text>
+  <text class="role" x="388" y="218">RotationComponent를 가진</text>
+  <text class="role" x="388" y="236">엔티티를 모두 찾아 돌립니다</text>
+
+  <path class="arrow" d="M 292 142 C 330 142, 340 180, 368 186"/>
+  <path class="arrow" d="M 292 298 C 330 298, 340 230, 368 218"/>
+  <text class="role" x="24" y="376">컴포넌트는 값만 담고, 일은 시스템이 합니다. 시스템은 앱 시작 시 한 번 등록합니다.</text>
+</svg>

@@ -1,0 +1,116 @@
+@Tutorial(time: 15, projectFiles: "SolarSystem-SupportFiles.zip") {
+    @Intro(title: "창과 몰입 공간 열기") {
+        창에 있는 버튼으로 전체 몰입 공간을 열고, 별 배경과 태양을 띄웁니다.
+
+        이 챕터는 세 가지 핵심 개념에 들어가기 전에 행성이 올라갈 무대를 세우는 짧은
+        준비 단계입니다. 챕터가 끝나면 실제로 우주 한가운데 서 볼 수 있습니다.
+    }
+
+    @Section(title: "몰입 공간을 여닫는 상태 만들기") {
+        @ContentAndMedia {
+            visionOS 앱은 여러 **Scene**으로 이루어집니다. 이 앱은 평면 창(`WindowGroup`)
+            하나와 주변을 모두 덮는 몰입 공간(`ImmersiveSpace`) 하나를 씁니다.
+
+            두 Scene은 서로를 직접 알지 못합니다. 그래서 `@Observable` 객체 하나를 양쪽에
+            주입해 같은 상태를 보게 합니다. 또 공간을 여닫는 일은 `await`로 시간이 걸리므로,
+            그 사이 버튼이 다시 눌리지 않도록 "전환 중" 상태를 둡니다.
+
+            @Image(source: "app-starfield.png", alt: "별이 가득한 우주 배경 위에 창이 떠 있는 화면")
+        }
+
+        @Steps {
+            @Step {
+                Project files의 `SolarSystem-SupportFiles.zip`을 내려받아 압축을 풀고,
+                `Chapter2` 폴더 안의 `RealityViews` 폴더 내용을 프로젝트의 `RealityViews`
+                폴더로 끌어다 놓습니다. **Add to targets**에서 **SolarSystem**을 체크합니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "Chapter2 폴더의 파일을 같은 이름 폴더로 옮기는 모습")
+
+                별 배경 `Starfield`와 태양 `Sun` 뷰입니다. 모델을 불러와 놓기만 하는
+                코드라 받아 씁니다. 다른 `ChapterN` 폴더는 해당 챕터에서 옮깁니다.
+            }
+
+            @Step {
+                `Model` 폴더에 `AppModel.swift`를 만듭니다. 몰입 공간의 이름과 열림 상태,
+                태양의 위치를 담습니다.
+                @Code(name: "AppModel.swift", file: "02-01-AppModel.swift")
+
+                `@Observable`을 붙였으므로 이 값을 읽는 뷰는 값이 바뀔 때 다시 그려집니다.
+            }
+
+            @Step {
+                `Solar System` 폴더에 `ToggleImmersiveSpaceButton.swift`를 만듭니다. 상태에
+                따라 열거나 닫고, 전환 중에는 버튼을 잠급니다.
+                @Code(name: "ToggleImmersiveSpaceButton.swift", file: "02-02-ToggleImmersiveSpaceButton.swift")
+
+                상태를 `.open`이나 `.closed`로 확정하는 일은 여기서 하지 않습니다. 몰입
+                공간이 실제로 나타나거나 사라질 때 공간 쪽 뷰가 합니다.
+            }
+        }
+    }
+
+    @Section(title: "별 배경과 태양 띄우기") {
+        @ContentAndMedia {
+            몰입 공간에 들어갈 내용은 `SolarSystem` 뷰 한 곳에 모읍니다. 지금은 별 배경과
+            태양뿐이지만, 3챕터에서 행성, 4챕터에서 포커스 무대가 여기에 더해집니다.
+
+            @Image(source: "app-sun.png", alt: "별 배경 속에 태양이 떠 있는 몰입 공간")
+        }
+
+        @Steps {
+            @Step {
+                `Solar System` 폴더에 `SolarSystem.swift`를 만듭니다. 나타날 때 상태를
+                `.open`으로, 사라질 때 `.closed`로 바꿉니다.
+                @Code(name: "SolarSystem.swift", file: "02-03-SolarSystem.swift")
+            }
+
+            @Step {
+                `SolarSystemApp.swift`를 고칩니다. `AppModel`을 `@State`로 딱 한 번 만들고,
+                창과 몰입 공간 양쪽에 `.environment(model)`로 주입합니다.
+                @Code(name: "SolarSystemApp.swift", file: "02-04-SolarSystemApp.swift", previousFile: "01-01-SolarSystemApp.swift")
+
+                `ImmersiveSpace(id:)`의 `id`는 버튼이 `openImmersiveSpace(id:)`에 넘기는 값과
+                같아야 합니다. 다르면 오류 없이 그냥 열리지 않습니다.
+            }
+
+            @Step {
+                **확인하기.** **Command + R**로 실행하고 창의 **Going to the Solar System**
+                버튼을 누릅니다. 주변이 별로 가득 차고 멀리 태양이 보이면 성공입니다. 다시
+                누르면 원래 공간으로 돌아옵니다.
+                @Image(source: "app-sun.png", alt: "별 배경 속에 태양이 떠 있는 몰입 공간")
+
+                아무것도 열리지 않으면 `AppModel`의 `immersiveSpaceID`와
+                `ImmersiveSpace(id:)`를 확인하세요.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            창과 몰입 공간이 같은 상태를 나눠 보게 만드는 방법은 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                두 Scene 안에서 각각 `AppModel()`을 새로 만듭니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    그러면 서로 다른 인스턴스가 두 개 생겨서, 한쪽의 변화가 다른 쪽에 전혀 전달되지 않습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                `@main`에서 한 번 만든 인스턴스를 양쪽 Scene에 `.environment(model)`로 주입합니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    인스턴스가 하나뿐이어야 창에서 연 몰입 공간이 창의 상태를 그대로 따라갑니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `ImmersiveSpace`가 `WindowGroup`의 하위 뷰이므로 자동으로 상속됩니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    두 Scene은 서로 독립적이며 상하 관계가 아닙니다.
+                }
+            }
+        }
+    }
+}

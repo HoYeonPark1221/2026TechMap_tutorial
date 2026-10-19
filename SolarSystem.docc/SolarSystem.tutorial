@@ -1,73 +1,107 @@
 @Tutorials(name: "SolarSystem") {
-    @Intro(title: "visionOS 공간 레이아웃으로 태양계 만들기") {
-        Apple Vision Pro에서 눈앞에 태양계를 펼치고, 행성을 바라보며 손가락을 맞대면
-        그 행성이 설명 패널과 함께 앞으로 다가오는 앱을 만듭니다.
+    @Intro(title: "visionOS로 만드는 태양계: Component/System, 공간 입력, Spatial Layout") {
+        Apple Vision Pro 앞에 태양계를 펼치고, 행성을 바라보며 손가락을 맞대면 그 행성이
+        설명 패널과 함께 눈앞으로 다가오는 앱을 만듭니다.
 
-        조각을 하나씩 만든 다음 마지막에 `@main` 진입점에서 전부 이어 붙이는 순서로
-        진행합니다. RealityKit의 엔티티 계층과 공간 입력, 그리고 SwiftUI가 3차원으로
-        확장된 **Spatial Layout** API를 차례로 다룹니다.
+        이 튜토리얼은 세 가지 개념에 집중합니다. RealityKit의 **Component와 System**으로
+        행성을 움직이고, 시선과 핀치라는 **공간 입력**으로 행성을 고르고, visionOS 26에서
+        SwiftUI에 깊이가 더해진 **Spatial Layout**으로 창을 만듭니다. 문구·설정값처럼
+        이 세 가지와 관계없는 파일은 직접 쓰지 않고 **Project files**로 받습니다.
 
-        문구나 설정값만 들어 있어 새로 배울 개념이 없는 파일은 직접 쓰지 않고
-        **Project files**로 함께 내려받습니다.
+        **필요한 것**: Apple silicon Mac, Xcode 26 이상, visionOS 26 SDK와 시뮬레이터.
+        Apple Vision Pro 없이 시뮬레이터로 끝까지 따라 할 수 있습니다. Swift 문법과
+        SwiftUI의 `View`·`@State`를 써 본 적이 있으면 충분하고, RealityKit은 몰라도
+        됩니다. 자세한 준비 사항은 첫 장 **시작하기 전에**를 확인하세요.
+
+        @Image(source: "app-focus-mars.png", alt: "확대된 화성 옆에 설명 패널이 떠 있는 완성 화면")
+    }
+
+    @Chapter(name: "시작하기 전에") {
+        준비물과 시뮬레이터 조작법, 그리고 이 튜토리얼에서 배울 세 가지 개념을 먼저
+        훑어봅니다. 코드를 쓰기 전에 전체 그림을 잡는 장입니다.
+
+        @Image(source: "diagram-ecs.svg", alt: "컴포넌트를 가진 엔티티를 시스템이 처리하는 관계도")
+        @TutorialReference(tutorial: "doc:00-BeforeYouBegin")
     }
 
     @Chapter(name: "프로젝트와 에셋 준비하기") {
-        새 visionOS 앱을 만들고, 태양과 여덟 행성 모델·별 배경·조명 이미지를 연결합니다.
-        코드를 쓰기 전에 반드시 먼저 끝내세요.
+        새 visionOS 앱을 만들고, 템플릿 파일을 정리한 뒤 행성 모델 패키지와 이미지를
+        연결합니다. 마지막에 빌드하고 실행해 빈 창이 뜨는지 확인합니다.
 
-        @Image(source: "diagram-assets-folder.svg", alt: "여러 개의 행성 모델 파일이 폴더에 담겨 있는 모습")
+        @Image(source: "diagram-package-location.svg", alt: "프로젝트 폴더 아래 Packages 폴더에 패키지가 놓인 구조")
         @TutorialReference(tutorial: "doc:01-ProjectAndAssets")
     }
 
-    @Chapter(name: "행성 엔티티 만들기") {
-        회전하는 값을 담는 컴포넌트와 그 값을 실제로 움직이는 시스템을 나눠 만들고,
-        빈 엔티티를 층층이 쌓아 공전과 자전을 동시에 표현합니다.
+    @Chapter(name: "창과 몰입 공간 열기") {
+        창의 버튼으로 몰입 공간을 열고, 별 배경과 태양을 띄웁니다. 앞으로 만들 행성이
+        올라갈 무대를 먼저 세워 두는 짧은 장입니다.
 
-        @Image(source: "diagram-planet-hierarchy.svg", alt: "네 개의 빈 엔티티가 부모에서 자식으로 이어지고 맨 안쪽에 행성 모델이 달린 계층도")
-        @TutorialReference(tutorial: "doc:02-PlanetEntity")
+        @Image(source: "app-sun.png", alt: "별 배경 속에 태양이 떠 있는 몰입 공간")
+        @TutorialReference(tutorial: "doc:02-WindowAndSpace")
+    }
+
+    @Chapter(name: "Component와 System으로 행성 움직이기") {
+        **핵심 개념 1.** 회전 값을 담는 컴포넌트와 그 값을 매 프레임 읽어 움직이는 시스템을
+        나눠 만들고, 빈 엔티티를 층층이 쌓아 공전과 자전을 동시에 표현합니다.
+
+        @Image(source: "diagram-ecs.svg", alt: "엔티티에 붙은 RotationComponent를 RotationSystem이 읽어 회전시키는 관계도")
+        @TutorialReference(tutorial: "doc:03-ComponentAndSystem")
     }
 
     @Chapter(name: "보고, 집고, 불러오기") {
-        행성을 시선과 핀치로 선택해 앞으로 불러오고, 그 옆에 SwiftUI 설명 패널을 붙인 뒤
-        창 쪽 UI를 Spatial Layout API로 다듬습니다.
+        **핵심 개념 2.** 엔티티에 입력용 컴포넌트를 붙여 시선과 핀치를 받고, 고른 행성을
+        눈앞으로 불러와 SwiftUI 설명 패널을 옆에 붙입니다.
 
-        @Image(source: "app-focus-mars.png", alt: "확대된 행성 옆에 설명 패널이 떠 있는 화면")
-        @TutorialReference(tutorial: "doc:03-FocusAndPanel")
+        @Image(source: "diagram-spatial-input.svg", alt: "세 컴포넌트를 붙인 엔티티에 시선과 핀치가 전달되는 흐름도")
+        @TutorialReference(tutorial: "doc:04-SpatialInput")
     }
 
-    @Chapter(name: "하나의 앱으로 조립하기") {
-        지금까지 만든 조각들을 `@main` 진입점에서 이어 붙입니다. 창과 몰입 공간을
-        Scene으로 등록하고, 둘이 같은 상태를 나눠 보게 만듭니다.
+    @Chapter(name: "Spatial Layout으로 창 만들기") {
+        **핵심 개념 3.** visionOS 26의 `SpatialContainer`와 `depthAlignment`로 깊이를 가진
+        창 UI를 만들고, 모든 조각을 `@main`에서 마무리합니다.
 
-        @Image(source: "app-starfield.png", alt: "별이 가득한 우주 배경 위에 창이 떠 있는 화면")
-        @TutorialReference(tutorial: "doc:04-AppEntryPoint")
+        @Image(source: "diagram-spatial-layout.svg", alt: "SpatialContainer와 depthAlignment가 깊이 방향 배치를 정하는 모습")
+        @TutorialReference(tutorial: "doc:05-SpatialLayout")
     }
 
-    @Resources(title: "자료 내려받기") {
-        내려받을 파일은 두 가지입니다. 1챕터의 **Project files**는 모델 패키지와 이미지가 든
-        `SolarSystem-Assets.zip`(약 304MB)이고, 2~4챕터의 **Project files**는 설정값·문구
-        파일이 든 `SolarSystem-SupportFiles.zip`입니다. 뒤쪽 zip의 `README.txt`에 어떤
-        파일을 직접 쓰고 어떤 파일을 받아 쓰는지 정리되어 있습니다.
+    @Resources(title: "자료와 더 공부하기") {
+        내려받을 파일은 두 가지입니다. 각 챕터 페이지 위쪽의 **Project files** 버튼에서도
+        같은 파일을 받을 수 있습니다.
 
-        @Documentation(destination: "https://developer.apple.com/documentation/realitykit") {
-            공식 문서에서 더 자세한 내용을 볼 수 있습니다.
+        @Downloads(destination: "https://github.com/Spatial-Computing-TechMap/2026TechMap_tutorial/releases/download/assets-v2/SolarSystem-Assets.zip") {
+            튜토리얼에서 쓰는 두 가지 파일입니다.
 
-            - [RealityKit](https://developer.apple.com/documentation/realitykit) — 엔티티, 컴포넌트, 시스템
-            - [visionOS](https://developer.apple.com/documentation/visionos) — 창, 볼륨, 몰입 공간
-            - [SpatialContainer](https://developer.apple.com/documentation/swiftui/spatialcontainer) — 같은 공간에 뷰 겹쳐 두기
-            - [Alignment3D](https://developer.apple.com/documentation/swiftui/alignment3d) — 깊이를 포함한 정렬 기준
+            - **SolarSystem-Assets.zip** (약 300MB, 1챕터) — 행성 모델이 든 `WorldAssets`
+              패키지, 조명 이미지, 별 배경·카드 이미지. 안의 `README.txt`에 각 파일을 어디에
+              둘지 정리되어 있습니다.
+            - **SolarSystem-SupportFiles.zip** (약 120KB, 2~5챕터) — 직접 쓰지 않는 설정값·문구
+              파일을 챕터별 폴더로 나눠 담았고, 챕터마다 끝난 시점의 전체 소스를
+              `Checkpoints` 폴더에 넣었습니다. 막히면 비교해 보세요.
         }
 
         @Videos(destination: "https://developer.apple.com/videos/play/wwdc2025/273/") {
-            이 튜토리얼의 Spatial Layout 부분이 바탕으로 삼은 세션입니다.
+            세 가지 개념을 더 깊이 다루는 WWDC 세션입니다.
 
-            - [Meet SwiftUI spatial layout](https://developer.apple.com/videos/play/wwdc2025/273/) — WWDC25
+            - [Meet SwiftUI spatial layout](https://developer.apple.com/videos/play/wwdc2025/273/) — WWDC25, Spatial Layout
+            - [Better together: SwiftUI and RealityKit](https://developer.apple.com/videos/play/wwdc2025/274/) — WWDC25, attachment와 좌표 변환
+            - [What's new in visionOS 26](https://developer.apple.com/videos/play/wwdc2025/317/) — WWDC25
+            - [Build spatial experiences with RealityKit](https://developer.apple.com/videos/play/wwdc2023/10080/) — WWDC23, Entity·Component·System
+            - [Design for spatial input](https://developer.apple.com/videos/play/wwdc2023/10073/) — WWDC23, 시선과 핀치
+        }
+
+        @Documentation(destination: "https://developer.apple.com/documentation/realitykit") {
+            튜토리얼에서 쓴 API의 공식 문서입니다.
+
+            - [System](https://developer.apple.com/documentation/realitykit/system) — 컴포넌트를 매 프레임 처리하는 코드
+            - [InputTargetComponent](https://developer.apple.com/documentation/realitykit/inputtargetcomponent), [HoverEffectComponent](https://developer.apple.com/documentation/realitykit/hovereffectcomponent) — 공간 입력
+            - [SpatialTapGesture](https://developer.apple.com/documentation/swiftui/spatialtapgesture) — 3차원 위치를 알려 주는 탭
+            - [SpatialContainer](https://developer.apple.com/documentation/swiftui/spatialcontainer), [Alignment3D](https://developer.apple.com/documentation/swiftui/alignment3d), [depthAlignment(_:)](https://developer.apple.com/documentation/swiftui/layout/depthalignment(_:)) — Spatial Layout
         }
 
         @SampleCode(destination: "https://developer.apple.com/documentation/visionos/world") {
             이 앱의 바탕이 된 Apple의 샘플입니다.
 
-            - [Hello World](https://developer.apple.com/documentation/visionos/world) — 지구, 달, 인공위성 구현
+            - [Hello World](https://developer.apple.com/documentation/visionos/world) — 지구, 달, 인공위성과 태양계 몰입 공간
         }
     }
 }
