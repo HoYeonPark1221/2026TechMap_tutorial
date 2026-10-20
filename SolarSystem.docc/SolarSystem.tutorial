@@ -24,7 +24,7 @@
         프로젝트를 내려받아 모델 패키지를 넣고 빌드합니다. 폴더 구성과 앞으로 손댈
         자리를 훑어봅니다.
 
-        @Image(source: "diagram-assets-folder.svg", alt: "다섯 개 폴더로 나뉜 프로젝트 구조")
+        @Image(source: "diagram-assets-folder.svg", alt: "폴더별 역할과 직접 쓰는 자리를 표시한 프로젝트 구조")
         @TutorialReference(tutorial: "doc:01-ProjectAndAssets")
     }
 

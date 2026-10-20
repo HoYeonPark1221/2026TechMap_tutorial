@@ -1,22 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="650" viewBox="0 0 1080 650" font-family="-apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif">
-<rect width="1080" height="650" rx="24" fill="#121824"/>
-<text x="40" y="57" font-size="29" fill="#e8edf5" font-weight="600">패키지 폴더 전체를 프로젝트 안에 보관합니다</text>
-<text x="40" y="95" font-size="20" fill="#aebed2" font-weight="400">SolarSystem.xcodeproj가 있는 폴더를 기준으로 확인하세요.</text>
-<rect x="36" y="125" width="600" height="445" rx="16" fill="#1c2432" stroke="#354154"/>
-<text x="60" y="167" font-size="23" fill="#7dcfff" font-weight="600">SolarSystem/</text>
-<text x="60" y="216" font-size="20" fill="#e8edf5" font-weight="400">SolarSystem.xcodeproj</text>
-<text x="60" y="257" font-size="20" fill="#e8edf5" font-weight="400">SolarSystem/</text>
-<text x="60" y="298" font-size="20" fill="#e8edf5" font-weight="400">    Assets.xcassets/</text>
-<text x="60" y="339" font-size="20" fill="#e8edf5" font-weight="400">Packages/</text>
-<text x="60" y="380" font-size="20" fill="#e8edf5" font-weight="400">    RealityKitContent/  (앱 템플릿)</text>
-<text x="60" y="421" font-size="20" fill="#e8edf5" font-weight="400">    SolarSystemAssets/  (제공 패키지)</text>
-<text x="60" y="462" font-size="20" fill="#e8edf5" font-weight="400">        Package.swift</text>
-<rect x="660" y="125" width="384" height="445" rx="16" fill="#1c2432" stroke="#354154"/>
-<text x="684" y="167" font-size="23" fill="#7dcfff" font-weight="600">Add Local에서 선택할 폴더</text>
-<text x="684" y="216" font-size="20" fill="#e8edf5" font-weight="400">Packages/</text>
-<text x="684" y="257" font-size="20" fill="#e8edf5" font-weight="400">    SolarSystemAssets/</text>
-<text x="684" y="298" font-size="20" fill="#e8edf5" font-weight="400"></text>
-<text x="684" y="339" font-size="20" fill="#e8edf5" font-weight="400">Package.swift가 있는</text>
-<text x="684" y="380" font-size="20" fill="#e8edf5" font-weight="400">폴더를 선택합니다.</text>
-<text x="40" y="620" font-size="19" fill="#aebed2" font-weight="400">다운로드 폴더 대신 프로젝트 안에 보관하면 파일을 함께 관리할 수 있습니다.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="압축을 푼 시작 프로젝트의 폴더 구조와 WorldAssets를 넣을 자리">
+  <style>
+    .card { fill: #1b2431; stroke: #374151; stroke-width: 1.5; rx: 12; }
+    .row { font: 400 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #d1d5db; }
+    .dim { font: 400 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #6b7280; }
+    .here { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f59e0b; }
+    .slot { fill: none; stroke: #f59e0b; stroke-width: 1.5; stroke-dasharray: 5 4; rx: 6; }
+    .head { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #f9fafb; }
+    .note { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+
+  <text class="title" x="24" y="30">압축을 푼 뒤의 폴더 구조</text>
+
+  <rect class="card" x="24" y="48" width="592" height="268"/>
+  <text class="head" x="44" y="76">SolarSystem-StartingProject/</text>
+
+  <text class="row" x="60" y="104">SolarSystem.xcodeproj</text>
+  <text class="dim" x="300" y="104">← 이 파일을 엽니다</text>
+
+  <text class="row" x="60" y="130">SolarSystem/</text>
+  <text class="dim" x="300" y="130">← 코드와 리소스가 전부 들어 있음</text>
+  <text class="dim" x="84" y="152">Entities/  Model/  RealityViews/  Scenes/  Systems/  Resources/</text>
+
+  <text class="row" x="60" y="182">Packages/</text>
+  <text class="row" x="84" y="206">RealityKitContent/</text>
+  <text class="dim" x="300" y="206">← 들어 있음</text>
+
+  <rect class="slot" x="78" y="220" width="200" height="26"/>
+  <text class="here" x="90" y="238">WorldAssets/</text>
+  <text class="here" x="300" y="238">← 여기에 넣습니다</text>
+  <text class="dim" x="108" y="264">Package.swift</text>
+
+  <text class="row" x="60" y="294">README.txt</text>
+
+  <text class="note" x="24" y="350">에셋 zip에서 꺼낸 WorldAssets 폴더를 통째로 Packages 안에 넣으면 됩니다.</text>
+  <text class="note" x="24" y="374">Add Local로 다시 연결할 필요는 없습니다. 프로젝트가 이 경로를 이미 참조합니다.</text>
 </svg>

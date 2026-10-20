@@ -1,4 +1,4 @@
-@Tutorial(time: 20, projectFiles: "SolarSystem-StartingProject.zip") {
+@Tutorial(time: 20) {
     @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
 
     @Intro(title: "창과 몰입 공간 오가기") {
@@ -16,7 +16,7 @@
 
             그래서 "열림"과 "닫힘" 사이에 "전환 중"을 하나 더 둡니다.
 
-            @Image(source: "diagram-asset-bundle.svg", alt: "창과 몰입 공간이 같은 상태 객체를 공유하는 구조도")
+            @Image(source: "diagram-immersive-state.svg", alt: "여는 길과 닫는 길에서 closed, inTransition, open 상태를 버튼과 공간이 나눠 기록하는 흐름도")
         }
 
         @Steps {

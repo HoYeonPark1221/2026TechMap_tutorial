@@ -1,21 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" font-family="-apple-system, BlinkMacSystemFont, Apple SD Gothic Neo, sans-serif">
-<rect width="1080" height="620" rx="24" fill="#121824"/>
-<text x="40" y="57" font-size="29" fill="#e8edf5" font-weight="600">제공 파일 하나로 에셋 준비를 시작합니다</text>
-<text x="40" y="95" font-size="20" fill="#aebed2" font-weight="400">별 배경 1장 + 태양과 여덟 행성이 들어 있는 완성된 패키지</text>
-<rect x="36" y="125" width="485" height="415" rx="16" fill="#1c2432" stroke="#354154"/>
-<text x="60" y="167" font-size="23" fill="#7dcfff" font-weight="600">SolarSystem-Assets/</text>
-<text x="60" y="216" font-size="20" fill="#e8edf5" font-weight="400">Starfield.jpg</text>
-<text x="60" y="257" font-size="20" fill="#e8edf5" font-weight="400">SolarSystemAssets/</text>
-<text x="60" y="298" font-size="20" fill="#e8edf5" font-weight="400">    Package.swift</text>
-<text x="60" y="339" font-size="20" fill="#e8edf5" font-weight="400">    Package.realitycomposerpro</text>
-<text x="60" y="380" font-size="20" fill="#e8edf5" font-weight="400">    Sources/</text>
-<text x="60" y="421" font-size="20" fill="#e8edf5" font-weight="400">README.txt</text>
-<rect x="545" y="125" width="499" height="415" rx="16" fill="#1c2432" stroke="#354154"/>
-<text x="569" y="167" font-size="23" fill="#7dcfff" font-weight="600">모델은 패키지 안에 준비되어 있습니다</text>
-<text x="569" y="216" font-size="20" fill="#e8edf5" font-weight="400">태양 · 수성 · 금성 · 지구 · 화성</text>
-<text x="569" y="257" font-size="20" fill="#e8edf5" font-weight="400">목성 · 토성 · 천왕성 · 해왕성</text>
-<text x="569" y="298" font-size="20" fill="#e8edf5" font-weight="400">태양과 지구의 연결 데이터·텍스처</text>
-<text x="569" y="339" font-size="20" fill="#e8edf5" font-weight="400">폴더 전체를 복사한 뒤</text>
-<text x="569" y="380" font-size="20" fill="#e8edf5" font-weight="400">Xcode에서 Add Local로 연결합니다.</text>
-<text x="40" y="590" font-size="19" fill="#aebed2" font-weight="400">패키지 내부의 파일 이름과 하위 폴더 구조를 그대로 유지하세요.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360" role="img" aria-label="내려받는 두 파일과 WorldAssets 패키지를 프로젝트의 Packages 폴더로 옮기는 흐름">
+  <style>
+    .card { fill: #1b2431; stroke: #374151; stroke-width: 1.5; rx: 12; }
+    .projbar { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; rx: 6; }
+    .pkgbar { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; rx: 6; }
+    .arrow { stroke: #10b981; stroke-width: 1.8; fill: none; }
+    .head { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .sub { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .item { font: 400 11px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #d1d5db; }
+    .note { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .ok { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #10b981; }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <rect x="0" y="0" width="640" height="360" fill="#111827"/>
+
+  <text class="title" x="24" y="30">1챕터에서 받는 파일 두 개</text>
+
+  <rect class="card" x="24" y="46" width="276" height="142"/>
+  <rect class="projbar" x="40" y="62" width="244" height="24"/>
+  <text class="head" x="52" y="79">SolarSystem-StartingProject.zip</text>
+  <text class="sub" x="40" y="108">약 4MB · Project files 버튼</text>
+  <text class="item" x="40" y="130">SolarSystem.xcodeproj</text>
+  <text class="item" x="40" y="150">SolarSystem/ — 폴더와 파일 전부</text>
+  <text class="item" x="40" y="170">Packages/RealityKitContent/</text>
+
+  <rect class="card" x="340" y="46" width="276" height="142"/>
+  <rect class="pkgbar" x="356" y="62" width="186" height="24"/>
+  <text class="head" x="368" y="79">SolarSystem-Assets.zip</text>
+  <text class="sub" x="356" y="108">약 305MB · 릴리스 링크</text>
+  <text class="item" x="356" y="130">WorldAssets/ — 이것만 씁니다</text>
+  <text class="item" x="356" y="150">태양 · 여덟 행성 · 달 · 인공위성</text>
+  <text class="item" x="356" y="170">모델과 텍스처</text>
+
+  <path class="arrow" d="M 478 188 L 478 214 L 170 214 L 170 240"/>
+  <path class="arrow" d="M 163 232 L 170 240 L 177 232"/>
+  <text class="ok" x="192" y="210">WorldAssets 폴더만 옮깁니다</text>
+
+  <rect class="card" x="24" y="244" width="592" height="62"/>
+  <rect class="pkgbar" x="44" y="258" width="272" height="24"/>
+  <text class="head" x="56" y="275">Packages/WorldAssets/Package.swift</text>
+  <text class="sub" x="44" y="298">프로젝트가 이 경로를 이미 참조하므로 Add Local은 필요 없습니다</text>
+
+  <text class="note" x="24" y="338">이미지와 조명 스카이박스는 시작 프로젝트에 이미 들어 있어, 따로 옮길 것이 없습니다.</text>
 </svg>

@@ -14,19 +14,19 @@
             행성 모델 패키지는 [SolarSystem-Assets.zip](https://github.com/Spatial-Computing-TechMap/2026TechMap_tutorial/releases/download/assets-v2/SolarSystem-Assets.zip)입니다(약 305MB).
             둘 다 이 페이지에서 받으세요.
 
-            @Image(source: "diagram-asset-bundle.svg", alt: "프로젝트 폴더와 모델 패키지가 따로 들어 있는 모습")
+            @Image(source: "diagram-asset-bundle.svg", alt: "내려받는 두 파일과 WorldAssets를 Packages로 옮기는 흐름")
         }
 
         @Steps {
             @Step {
                 두 zip을 모두 내려받아 압축을 풉니다.
-                @Image(source: "diagram-asset-bundle.svg", alt: "압축을 푼 두 폴더")
+                @Image(source: "diagram-asset-bundle.svg", alt: "내려받는 두 파일의 내용")
             }
 
             @Step {
                 에셋 zip의 `WorldAssets` 폴더를 프로젝트의 `Packages` 폴더 안으로
                 복사합니다.
-                @Image(source: "diagram-package-location.svg", alt: "Packages 폴더 아래 WorldAssets가 놓인 구조")
+                @Image(source: "diagram-package-location.svg", alt: "압축을 푼 폴더 구조와 WorldAssets를 넣을 자리")
 
                 `Packages/WorldAssets/Package.swift`가 되어야 합니다. 프로젝트가 이
                 경로를 이미 참조하고 있어서, 따로 연결할 일은 없습니다.
@@ -51,10 +51,10 @@
 
     @Section(title: "무엇이 들어 있는지 보기") {
         @ContentAndMedia {
-            폴더는 다섯 개입니다. 앞으로 쓸 파일도 전부 이 안에 있으므로, 새 파일을
+            폴더는 여섯 개입니다. 앞으로 쓸 파일도 전부 이 안에 있으므로, 새 파일을
             만들 때는 해당 폴더에 넣기만 하면 됩니다.
 
-            @Image(source: "diagram-assets-folder.svg", alt: "다섯 개 폴더로 나뉜 프로젝트 구조")
+            @Image(source: "diagram-assets-folder.svg", alt: "폴더별 역할과 직접 쓰는 자리를 표시한 프로젝트 구조")
         }
 
         @Steps {
@@ -67,7 +67,7 @@
             @Step {
                 `RealityViews`는 그 엔티티를 화면에 올리는 뷰, `Scenes`는 창과 몰입
                 공간, `Model`은 상태와 설정값입니다.
-                @Image(source: "diagram-assets-folder.svg", alt: "폴더별 역할")
+                @Image(source: "diagram-assets-folder.svg", alt: "폴더별 역할과 직접 쓰는 자리")
 
                 이 프로젝트에 `SolarSystem`이라는 **이름의 파일이나 폴더는 없습니다.**
                 프로젝트 이름과 겹쳐 헷갈리므로, 몰입 공간 쪽 뷰는

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="여는 길과 닫는 길에서 closed, inTransition, open 상태를 누가 기록하는지 보여 주는 흐름도">
+  <style>
+    .state { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; rx: 10; }
+    .mid { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; rx: 10; }
+    .arrow { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    .name { font: 600 14px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .btn { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #f59e0b; }
+    .spc { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #60a5fa; }
+    .lane { font: 600 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .note { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+  </style>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <text class="title" x="24" y="28">ImmersiveSpaceState</text>
+
+  <text class="lane" x="24" y="62">여는 길</text>
+  <rect class="state" x="24" y="76" width="140" height="48"/>
+  <text class="name" x="44" y="106">.closed</text>
+  <text class="btn" x="186" y="94">버튼</text>
+  <path class="arrow" marker-end="url(#a)" d="M 168 104 L 242 104"/>
+  <rect class="mid" x="246" y="76" width="148" height="48"/>
+  <text class="name" x="266" y="106">.inTransition</text>
+  <text class="spc" x="416" y="94">공간</text>
+  <path class="arrow" marker-end="url(#a)" d="M 398 104 L 472 104"/>
+  <rect class="state" x="476" y="76" width="140" height="48"/>
+  <text class="name" x="496" y="106">.open</text>
+
+  <text class="lane" x="24" y="176">닫는 길</text>
+  <rect class="state" x="24" y="190" width="140" height="48"/>
+  <text class="name" x="44" y="220">.open</text>
+  <text class="btn" x="186" y="208">버튼</text>
+  <path class="arrow" marker-end="url(#a)" d="M 168 218 L 242 218"/>
+  <rect class="mid" x="246" y="190" width="148" height="48"/>
+  <text class="name" x="266" y="220">.inTransition</text>
+  <text class="spc" x="416" y="208">공간</text>
+  <path class="arrow" marker-end="url(#a)" d="M 398 218 L 472 218"/>
+  <rect class="state" x="476" y="190" width="140" height="48"/>
+  <text class="name" x="496" y="220">.closed</text>
+
+  <text class="btn" x="24" y="286">버튼</text>
+  <text class="note" x="70" y="286">ToggleImmersiveSpaceButton — 여닫기를 await 하기 직전에 .inTransition으로 바꿉니다.</text>
+  <text class="spc" x="24" y="314">공간</text>
+  <text class="note" x="70" y="314">ImmersiveSolarSystem — onAppear / onDisappear에서 .open / .closed로 바꿉니다.</text>
+
+  <text class="note" x="24" y="352">버튼이 .open과 .closed까지 기록하지 않는 이유는, 몰입 공간에 이르는 경로가 버튼</text>
+  <text class="note" x="24" y="376">말고도 있기 때문입니다. 여는 데 실패했을 때만 버튼이 .closed로 되돌립니다.</text>
+</svg>
