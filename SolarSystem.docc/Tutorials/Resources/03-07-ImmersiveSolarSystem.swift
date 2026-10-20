@@ -1,7 +1,7 @@
 import SwiftUI
 import RealityKit
 
-struct SolarSystem: View {
+struct ImmersiveSolarSystem: View {
     @Environment(AppModel.self) private var model
 
     @PhysicalMetric(from: .meters) private var pointsPerMeter: CGFloat = 1

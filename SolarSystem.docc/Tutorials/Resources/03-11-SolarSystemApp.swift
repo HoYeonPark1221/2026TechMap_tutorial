@@ -23,7 +23,7 @@ struct SolarSystemApp: App {
         .windowStyle(.plain)
 
         ImmersiveSpace(id: model.immersiveSpaceID) {
-            SolarSystem()
+            ImmersiveSolarSystem()
                 .environment(model)
         }
         .immersionStyle(selection: $solarImmersionStyle, in: .full)

@@ -1,0 +1,280 @@
+@Tutorial(time: 30, projectFiles: "SolarSystem-Assets.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
+    @Intro(title: "Spatial Layout으로 배치하기") {
+        visionOS 26에서 SwiftUI의 정렬 기준에 깊이가 더해졌습니다. 다섯 가지를 씁니다 —
+        `SpatialContainer`, `depthAlignment`, `HStackLayout`, `frame(depth:)`,
+        `rotation3DLayout`.
+
+        앞의 두 섹션은 창 UI에서 개념만 익힙니다. 자식이 모두 평면이라 적용 전후의
+        화면이 같아서, 무엇이 달라지는지는 다이어그램으로 봅니다. 깊이 차이가 실제로
+        있는 곳은 마지막 섹션입니다.
+    }
+
+    @Section(title: "같은 자리에 겹쳐 두기 — SpatialContainer") {
+        @ContentAndMedia {
+            창에는 소개 카드와 컨트롤 패널이 번갈아 뜹니다. 둘은 같은 자리에서
+            불투명도로만 교차합니다.
+
+            `ZStack`은 x·y 두 축만 정렬합니다. `SpatialContainer`는 `Alignment3D`를
+            받아 깊이까지 정렬합니다.
+
+            @Image(source: "diagram-spatial-container.svg", alt: "ZStack은 x·y 두 축만, SpatialContainer는 x·y·z 세 축을 정렬한다는 비교도")
+        }
+
+        @Steps {
+            @Step {
+                `Scenes` 폴더에 `SwitchWindows.swift`를 만들고 두 뷰를 `ZStack`으로
+                겹칩니다.
+                @Code(name: "SwitchWindows.swift", file: "02-01-SwitchWindows.swift")
+            }
+
+            @Step {
+                `ZStack`을 `SpatialContainer(alignment: .center)`로 바꿉니다.
+                @Code(name: "SwitchWindows.swift", file: "02-02-SwitchWindows.swift", previousFile: "02-01-SwitchWindows.swift")
+
+                `alignment`의 기본값이 `.center`라 생략해도 됩니다. 적어 둔 것은 이
+                값이 깊이를 포함하는 `Alignment3D`임을 드러내기 위해서입니다.
+            }
+
+            @Step {
+                화면은 바뀌지 않습니다. 두 자식이 모두 깊이 0인 평면이라 맞출 깊이
+                차이가 없고, `.center`는 `ZStack`의 기본 정렬과 같습니다.
+                @Image(source: "diagram-spatial-container.svg", alt: "깊이가 있는 자식이 들어오면 두 컨테이너의 결과가 달라지는 모습")
+            }
+        }
+    }
+
+    @Section(title: "가로 배치에 앞뒤 기준 주기 — depthAlignment") {
+        @ContentAndMedia {
+            `depthAlignment`는 뷰 모디파이어가 아니라 `Layout` 프로토콜의 확장입니다.
+            `HStack`은 뷰라서 이 메서드가 아예 없습니다.
+
+            같은 배치를 `Layout` 값으로 표현한 `HStackLayout`으로 바꿔야 걸 수 있습니다.
+
+            @Image(source: "diagram-depth-alignment.svg", alt: "front, center, back이 깊이가 다른 두 자식을 각각 어떤 면에 맞추는지 보여 주는 비교도")
+        }
+
+        @Steps {
+            @Step {
+                같은 폴더에 `SolarCard.swift`를 만들고 글과 미리보기를 `HStack`으로
+                나란히 놓습니다.
+                @Code(name: "SolarCard.swift", file: "02-03-SolarCard.swift")
+            }
+
+            @Step {
+                `HStack`을 `HStackLayout`으로 바꾸고 `.depthAlignment(.center)`를
+                겁니다.
+                @Code(name: "SolarCard.swift", file: "02-04-SolarCard.swift", previousFile: "02-03-SolarCard.swift")
+
+                `HStack`에 그대로 붙이면 `has no member 'depthAlignment'`가 납니다.
+            }
+
+            @Step {
+                여기서도 화면은 그대로입니다. 글도 이미지도 평면이라 `.front`,
+                `.center`, `.back`이 같은 자리에 놓입니다.
+                @Image(source: "diagram-depth-alignment.svg", alt: "자식이 모두 평면이면 세 값의 결과가 같아지는 모습")
+
+                **Command + B**로 빌드합니다. 오류가 없어야 합니다.
+            }
+        }
+    }
+
+    @Section(title: "행성과 설명 창을 형제로 놓기") {
+        @ContentAndMedia {
+            설명 창을 "행성 오른쪽 0.9미터"처럼 상수로 놓으면, 고리가 본체보다 두 배
+            넘게 퍼지는 토성에서 창이 고리에 파묻힙니다.
+
+            대신 둘을 한 레이아웃의 형제로 둡니다. 레이아웃이 행성을 실측한 만큼 자리를
+            비우므로 행성마다 다른 간격이 저절로 나옵니다. 행성은 깊이가 있고 창은 거의
+            평면이라, 깊이 정렬이 실제로 동작하는 곳도 여기입니다.
+
+            @Image(source: "app-focus-mars.png", alt: "확대된 행성 오른쪽에 설명 창이 나란히 놓인 화면")
+        }
+
+        @Steps {
+            @Step {
+                `RealityViews/PlanetFocusLayout.swift`를 엽니다. `body`만 비어 있습니다.
+                @Code(name: "PlanetFocusLayout.swift", file: "02-05-PlanetFocusLayout.swift")
+
+                아래 `show(_:)`가 행성을 포커스 크기로 맞춘 뒤 `visualBounds`로 재어
+                `measured`에 넣습니다. `body`가 쓰는 실측값이 여기서 나옵니다.
+            }
+
+            @Step {
+                `HStackLayout(spacing:).depthAlignment(.center)` 안에 행성과 설명 창을
+                형제로 넣습니다.
+                @Code(name: "PlanetFocusLayout.swift", file: "02-06-PlanetFocusLayout.swift", previousFile: "02-05-PlanetFocusLayout.swift")
+
+                `spacing`은 `@PhysicalMetric`으로 선언한 0.1미터입니다. 레이아웃은
+                포인트로 계산하므로 변환이 필요합니다.
+            }
+
+            @Step {
+                행성 쪽에 실측값만큼 자리를 잡아 줍니다. 가로·세로는 `frame`, 깊이는
+                `frame(depth:)`입니다.
+                @Code(name: "PlanetFocusLayout.swift", file: "02-07-PlanetFocusLayout.swift", previousFile: "02-06-PlanetFocusLayout.swift")
+
+                `RealityView`는 스스로 크기를 주장하지 않습니다. 세 축을 적어 줘야
+                `depthAlignment`가 맞출 깊이도 생깁니다.
+            }
+
+            @Step {
+                자전축 기울기를 `rotation3DLayout`으로 겁니다.
+                @Code(name: "PlanetFocusLayout.swift", file: "02-08-PlanetFocusLayout.swift", previousFile: "02-07-PlanetFocusLayout.swift")
+
+                첫 번째 역할은 기울이기입니다. `focusConfiguration(_:)`이 포커스
+                사본의 `axialTilt`를 0으로 만들기 때문에, 이 줄이 없으면 확대된 토성이
+                똑바로 서 버립니다.
+            }
+
+            @Step {
+                두 번째 역할은 그 회전을 레이아웃에 알리는 것입니다.
+                @Image(source: "diagram-rotation3d-layout.svg", alt: "rotation3DEffect는 회전 전 프레임을, rotation3DLayout은 회전한 뷰를 감싸는 상자를 보고한다는 비교도")
+
+                `rotation3DEffect`는 회전 전 프레임을 보고해서 형제 뷰가 기울어진
+                콘텐츠를 비켜 주지 않습니다. 토성 기준으로 예약 반폭이 0.662미터에서
+                0.719미터로 늘어, 창이 5.7센티미터 더 밀려납니다. 겹침을 막는 것은
+                `visualBounds` 실측이고, 기울기 보고는 거기에 여유를 더합니다.
+            }
+
+            @Step {
+                SDK 구현에 두 역할이 두 줄로 드러납니다.
+                @Code(name: "SwiftUICore.swiftinterface", file: "rotation3DLayout-implementation.swift")
+
+                그래서 자전축 기울기를 엔티티에서 빼고 SwiftUI로 올렸습니다. RealityKit
+                안에서 돌리면 레이아웃이 그 회전을 알 수 없습니다.
+            }
+
+            @Step {
+                설명 창 쪽에도 확대한 만큼 자리를 잡아 줍니다.
+                @Code(name: "PlanetFocusLayout.swift", file: "02-09-PlanetFocusLayout.swift", previousFile: "02-08-PlanetFocusLayout.swift")
+
+                `scaleEffect`는 겉모습만 키웁니다. 차지하는 자리는 그대로라서 뒤이은
+                `frame`으로 커진 크기를 예약해야 합니다. 앞의 `rotation3DLayout`과 같은
+                구분입니다.
+            }
+
+            @Step {
+                **Command + B**로 빌드합니다. 오류가 없어야 합니다.
+
+                확대된 행성은 3챕터 끝에서 봅니다. 아직 몰입 공간을 열 방법이 없기
+                때문입니다.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            `depthAlignment`를 `HStack`에 직접 걸 수 없는 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                `HStack`은 가로 방향만 다루므로 깊이 개념이 없기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    `HStackLayout`도 같은 가로 배치를 하지만 `depthAlignment`를 걸 수 있습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                `depthAlignment`는 `Layout` 프로토콜의 확장인데, `HStack`은 뷰이기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    같은 배치를 `Layout` 값으로 표현하는 `HStackLayout`으로 바꾼 뒤 걸면 됩니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `HStack` 안에는 3차원 콘텐츠를 넣을 수 없기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    넣을 수 있습니다. 깊이 정렬 기준을 지정할 방법이 없을 뿐입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `ZStack`을 `SpatialContainer(alignment: .center)`로 바꿔도 화면이 그대로인 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                `SpatialContainer`는 자식이 둘일 때 `ZStack`과 똑같이 동작하기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    자식 개수와는 관계가 없습니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                두 자식이 모두 평면이라 맞출 깊이 차이가 없고, `.center`가 `ZStack`의 기본 정렬과 같기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    깊이 차이가 실제로 있는 곳은 행성과 설명 창을 나란히 놓는 포커스 레이아웃입니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `alignment`에 기본값이 있어서 적은 값이 무시되기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    기본값이 `.center`인 것은 맞지만, 무시되는 것은 아닙니다. 적은 값과 기본값이 같을 뿐입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            자전축 기울기를 `rotation3DEffect`가 아니라 `rotation3DLayout`으로 거는 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                `rotation3DEffect`는 visionOS 26에서 쓸 수 없기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    지금도 쓸 수 있습니다. `rotation3DLayout`이 내부에서 그대로 호출합니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                `rotation3DEffect`는 회전 전 프레임을 보고해서, 형제 뷰가 기울어진 콘텐츠를 비켜 주지 않기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    `rotation3DLayout`은 회전한 뷰를 감싸는 바운딩 박스를 보고합니다. 토성 기준 예약 반폭이 0.662미터에서 0.719미터로 늘어납니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `rotation3DEffect`는 z축 회전을 지원하지 않기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    축은 둘 다 자유롭게 지정합니다. 차이는 레이아웃에 알리느냐입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            설명 창에 `scaleEffect`만 걸고 `frame`을 빼면 어떻게 되나요?
+
+            @Choice(isCorrect: false) {
+                창이 커지지 않습니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    겉모습은 커집니다. 커지지 않는 것은 레이아웃이 내어 주는 자리입니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                창은 커 보이지만 차지하는 자리는 그대로여서, 행성이 창 쪽으로 더 가까이 놓입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    겉모습을 바꾸는 일과 레이아웃에 알리는 일은 별개입니다. `rotation3DLayout`과 같은 구분입니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `HStackLayout`이 자식 크기를 다시 재므로 결과가 같습니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    레이아웃은 자식이 보고한 크기를 씁니다. `scaleEffect`는 그 보고를 바꾸지 않습니다.
+                }
+            }
+        }
+    }
+}

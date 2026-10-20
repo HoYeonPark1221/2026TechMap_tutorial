@@ -1,0 +1,277 @@
+@Tutorial(time: 20, projectFiles: "SolarSystem-StartingProject.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
+    @Intro(title: "창과 몰입 공간 오가기") {
+        상태는 두 가지뿐입니다. 창만 떠 있는 공유 공간과, 주변이 전부 우주로 덮이는
+        전체 몰입 공간입니다.
+
+        몰입 스타일은 늘 `.full` 하나라, 전환이란 스타일을 바꾸는 일이 아니라
+        **몰입 공간을 여느냐 닫느냐**입니다.
+    }
+
+    @Section(title: "전환 중이라는 상태 만들기") {
+        @ContentAndMedia {
+            몰입 공간을 여닫는 일은 `await`라서 시간이 걸립니다. 그 사이에 버튼이 또
+            눌리면 상태가 어긋납니다.
+
+            그래서 "열림"과 "닫힘" 사이에 "전환 중"을 하나 더 둡니다.
+
+            @Image(source: "diagram-asset-bundle.svg", alt: "창과 몰입 공간이 같은 상태 객체를 공유하는 구조도")
+        }
+
+        @Steps {
+            @Step {
+                `Model/AppModel.swift`를 엽니다. 포커스와 머리 추적 상태는 이미 들어
+                있습니다.
+                @Code(name: "AppModel.swift", file: "03-01-AppModel.swift")
+            }
+
+            @Step {
+                맨 위에 몰입 공간 상태를 더합니다.
+                @Code(name: "AppModel.swift", file: "03-02-AppModel.swift", previousFile: "03-01-AppModel.swift")
+
+                `immersiveSpaceID`는 공간을 열 때와 선언할 때 양쪽이 같은 값을 보게
+                여기에 둡니다.
+            }
+        }
+    }
+
+    @Section(title: "여닫는 버튼 채우기") {
+        @ContentAndMedia {
+            `openImmersiveSpace`와 `dismissImmersiveSpace`는 환경값으로 들어옵니다.
+            버튼은 지금 상태를 보고 둘 중 하나를 고르면 됩니다.
+
+            여는 쪽은 실패도 돌려줍니다. 되돌려 놓지 않으면 버튼이 "전환 중"에 영원히
+            묶입니다.
+
+            @Image(source: "app-starfield.png", alt: "창의 버튼으로 몰입 공간을 연 화면")
+        }
+
+        @Steps {
+            @Step {
+                `Scenes/ToggleImmersiveSpaceButton.swift`를 엽니다. 아직 아무 일도 하지
+                않는 버튼입니다.
+                @Code(name: "ToggleImmersiveSpaceButton.swift", file: "03-03-ToggleImmersiveSpaceButton.swift")
+            }
+
+            @Step {
+                상태에 따라 여닫도록 속을 채웁니다.
+                @Code(name: "ToggleImmersiveSpaceButton.swift", file: "03-04-ToggleImmersiveSpaceButton.swift", previousFile: "03-03-ToggleImmersiveSpaceButton.swift")
+
+                여닫기가 끝난 뒤 `.open`이나 `.closed`로 바꾸는 코드는 여기 없습니다.
+                공간에 이르는 경로가 버튼 말고도 있어서, 다음 섹션에서 공간 자신이
+                기록하게 합니다.
+            }
+
+            @Step {
+                전환 중에는 버튼을 잠급니다.
+                @Code(name: "ToggleImmersiveSpaceButton.swift", file: "03-05-ToggleImmersiveSpaceButton.swift", previousFile: "03-04-ToggleImmersiveSpaceButton.swift")
+
+                `.inTransition` 갈래가 `break`만 하는 것은 이 `disabled` 덕분입니다.
+            }
+        }
+    }
+
+    @Section(title: "열림과 닫힘을 공간 자신이 기록하기") {
+        @ContentAndMedia {
+            몰입 공간 안의 내용은 이미 `ImmersiveSolarSystem`에 쌓여 있습니다. 여기에
+            생명주기를 붙입니다.
+
+            버튼이 아니라 이 자리에 두는 이유는, 사용자가 시스템 제스처로 닫는 경로도
+            있기 때문입니다.
+
+            @Image(source: "app-solarsystem.png", alt: "몰입 공간에 펼쳐진 태양계 화면")
+        }
+
+        @Steps {
+            @Step {
+                `Scenes/ImmersiveSolarSystem.swift`를 엽니다.
+                @Code(name: "ImmersiveSolarSystem.swift", file: "03-06-ImmersiveSolarSystem.swift")
+
+                2챕터에서 만든 포커스 레이아웃을 시선 정면에 놓는 부분은 이미 들어
+                있습니다.
+            }
+
+            @Step {
+                생명주기를 붙입니다.
+                @Code(name: "ImmersiveSolarSystem.swift", file: "03-07-ImmersiveSolarSystem.swift", previousFile: "03-06-ImmersiveSolarSystem.swift")
+
+                머리 추적도 공간이 열려 있는 동안만 데이터가 오므로 여기서 시작하고
+                멈춥니다.
+            }
+
+            @Step {
+                2챕터에서 만든 `SwitchWindows`에 `isShowingSolar` 배선을 붙입니다.
+                @Code(name: "SwitchWindows.swift", file: "03-08-SwitchWindows.swift", previousFile: "02-02-SwitchWindows.swift")
+
+                몰입 공간에 들어가면 컨트롤이, 나오면 소개 카드가 보입니다.
+            }
+        }
+    }
+
+    @Section(title: "@main에서 두 Scene 잇기") {
+        @ContentAndMedia {
+            창과 몰입 공간은 서로 다른 Scene이라 직접 대화하지 못합니다. 같은
+            `@Observable` 객체 하나를 양쪽에 주입해야 합니다.
+
+            @Image(source: "app-sun.png", alt: "전체 몰입 공간에서 태양을 바라보는 화면")
+        }
+
+        @Steps {
+            @Step {
+                `SolarSystemApp.swift`를 엽니다. 시스템을 등록하는 `init()`은 이미 들어
+                있습니다.
+                @Code(name: "SolarSystemApp.swift", file: "03-09-SolarSystemApp.swift")
+            }
+
+            @Step {
+                `AppModel`을 한 번만 만들고, 자리 표시용 `Text`를 `SwitchWindows`로
+                바꾸면서 주입합니다.
+                @Code(name: "SolarSystemApp.swift", file: "03-10-SolarSystemApp.swift", previousFile: "03-09-SolarSystemApp.swift")
+
+                `.windowStyle(.plain)`이 없으면 시스템이 깐 유리 배경이 남습니다. 그
+                배경은 `opacity`의 적용 대상이 아니어서, 카드를 투명하게 만들어도
+                사라지지 않습니다.
+            }
+
+            @Step {
+                `ImmersiveSpace` Scene을 더하고 같은 `model`을 주입합니다.
+                @Code(name: "SolarSystemApp.swift", file: "03-11-SolarSystemApp.swift", previousFile: "03-10-SolarSystemApp.swift")
+
+                `in: .full`이 허용 집합이라 이 앱의 몰입 공간은 다른 스타일로 바뀌지
+                않습니다.
+            }
+
+            @Step {
+                `Info.plist`의 `UISceneInitialImmersionStyle`은
+                `UIImmersionStyleMixed`입니다. 방금 쓴 `.full`과 달라도 문제가 아닙니다.
+
+                그 키는 공간이 뜨는 첫 순간의 스타일일 뿐이고, 실제 스타일은
+                `immersionStyle(selection:in:)`이 정합니다.
+            }
+
+            @Step {
+                **Command + R**로 실행합니다. 창의 버튼으로 태양계를 열고, 행성을
+                바라보며 손가락을 맞대 보세요.
+                @Image(source: "app-focus-mars.png", alt: "확대된 행성 옆에 설명 창이 떠 있는 화면")
+
+                토성은 고리가 퍼진 만큼 창이 더 밀려나고, 수성은 바짝 붙습니다. 2챕터에서
+                만든 레이아웃이 여기서 보입니다.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            `ImmersiveSpaceState`에 `.inTransition`을 둔 이유는 무엇인가요?
+
+            @Choice(isCorrect: true) {
+                여닫기가 끝나기 전에 버튼이 다시 눌리는 것을 막기 위해서입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    두 메서드 모두 `await`라서 시간이 걸립니다. 그 구간을 중간 상태로 덮고 버튼을 잠급니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                몰입 스타일이 mixed에서 full로 바뀌는 동안을 나타내기 위해서입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    허용 스타일이 `.full` 하나뿐이라 스타일이 바뀌는 일 자체가 없습니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                몰입 공간이 열리는 애니메이션 길이를 재기 위해서입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    시간을 재는 값이 아니라 버튼을 잠글 구간을 나타내는 상태입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `.open`과 `.closed`를 버튼이 아니라 `ImmersiveSolarSystem`의 `onAppear`/`onDisappear`에서 기록하는 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                버튼에서는 `@Observable` 객체를 수정할 수 없기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    버튼도 수정합니다. `.inTransition`은 버튼이 기록합니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                몰입 공간이 열리고 닫히는 경로가 버튼 말고도 있기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    사용자가 시스템 제스처로 닫을 수도 있습니다. 공간 자신이 기록하면 어느 경로로든 상태가 맞습니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `openImmersiveSpace`가 성공 여부를 돌려주지 않기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    돌려줍니다. 그 결과는 실패했을 때 `.closed`로 되돌리는 데 씁니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `Info.plist`가 `UIImmersionStyleMixed`인데 앱이 전체 몰입으로 뜨는 이유는 무엇인가요?
+
+            @Choice(isCorrect: false) {
+                `Info.plist` 값이 잘못되어 무시되고 있기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    잘못된 값이 아닙니다. 공간이 뜨는 첫 순간의 스타일로 실제로 쓰입니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                그 키는 초기 스타일일 뿐이고, 실제 스타일은 `immersionStyle(selection:in:)`이 정하기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    허용 집합이 `.full` 하나뿐이라 공간이 뜨자마자 전체 몰입이 됩니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                visionOS 26부터 mixed 스타일이 사라졌기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    mixed는 그대로 있습니다. 이 앱이 허용 집합에 넣지 않았을 뿐입니다.
+                }
+            }
+        }
+
+        @MultipleChoice {
+            `.windowStyle(.plain)`을 주지 않으면 어떻게 되나요?
+
+            @Choice(isCorrect: false) {
+                창이 아예 뜨지 않습니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    창은 뜹니다. 문제는 창에 깔리는 배경입니다.
+                }
+            }
+
+            @Choice(isCorrect: true) {
+                시스템이 깐 유리 배경이 `opacity`의 적용 대상이 아니라, 카드를 투명하게 만들어도 배경이 남습니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    그래서 배경을 시스템에 맡기지 않고 `SolarCard`가 직접 겁니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                `SpatialContainer`가 자식을 겹쳐 두지 못합니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    겹쳐 두는 일은 창 스타일과 관계없습니다.
+                }
+            }
+        }
+    }
+}

@@ -4,6 +4,7 @@ import SwiftUI
 @MainActor
 @Observable
 class AppModel {
+
     var solarEarth: EarthEntity.Configuration = .solarEarthDefault
     var solarSatellite: SatelliteEntity.Configuration = .solarTelescopeDefault
     var solarMoon: SatelliteEntity.Configuration = .solarMoonDefault

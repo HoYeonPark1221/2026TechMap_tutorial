@@ -4,22 +4,27 @@ visionOS 26의 Spatial Layout API로 확대된 행성과 설명 창을 배치하
 전체 몰입 공간을 오가는 한국어 튜토리얼입니다.
 
 - [튜토리얼 보기](https://spatial-computing-techmap.github.io/2026TechMap_tutorial/tutorials/solarsystem/)
-- [Spatial Layout으로 배치하기](https://spatial-computing-techmap.github.io/2026TechMap_tutorial/tutorials/solarsystem/01-spatiallayout/)
+- [프로젝트와 에셋 준비하기](https://spatial-computing-techmap.github.io/2026TechMap_tutorial/tutorials/solarsystem/01-projectandassets/)
 - [완성형 에셋 패키지 다운로드](https://github.com/Spatial-Computing-TechMap/2026TechMap_tutorial/releases/download/assets-v2/SolarSystem-Assets.zip)
 - [원본 앱 프로젝트](https://github.com/Spatial-Computing-TechMap/Solar-System)
 
 ## 구성
 
-1. Spatial Layout으로 배치하기 — `SpatialContainer`, `depthAlignment`, `HStackLayout`, `frame(depth:)`, `rotation3DLayout`
-2. 창과 몰입 공간 오가기 — `ImmersiveSpaceState`, `openImmersiveSpace`/`dismissImmersiveSpace`, `immersionStyle(selection:in:)`, `windowStyle(.plain)`
+1. 프로젝트와 에셋 준비하기 — 시작 프로젝트를 열고 모델 패키지를 넣습니다
+2. Spatial Layout으로 배치하기 — `SpatialContainer`, `depthAlignment`, `HStackLayout`, `frame(depth:)`, `rotation3DLayout`
+3. 창과 몰입 공간 오가기 — `ImmersiveSpaceState`, `openImmersiveSpace`/`dismissImmersiveSpace`, `immersionStyle(selection:in:)`, `windowStyle(.plain)`
 
-나머지(프로젝트 생성과 에셋 연결, RealityKit의 엔티티·컴포넌트·시스템, 시선과 핀치 입력,
-고른 행성을 앞으로 불러오는 코드)는 한 줄씩 따라 쓰지 않고 시작 프로젝트로 제공합니다.
+나머지(RealityKit의 엔티티·컴포넌트·시스템, 시선과 핀치 입력, 고른 행성을 앞으로 불러오는 코드)는
+한 줄씩 따라 쓰지 않고 시작 프로젝트로 제공합니다.
 
-내려받을 파일은 두 가지입니다. 1챕터의 **Project files**는 `WorldAssets` 모델 패키지와 이미지가 든
-`SolarSystem-Assets.zip`이고, 2챕터의 **Project files**는 앱 소스가 든
-`SolarSystem-StartingProject.zip`입니다. 뒤쪽 zip의 `README.txt`에 어떤 파일을 받아 쓰고 어떤
-부분을 튜토리얼에서 직접 쓰는지 정리되어 있습니다.
+시작 프로젝트는 `.xcodeproj`와 폴더·파일이 모두 갖춰진 상태입니다. 동기화 폴더(Xcode 16+)를 쓰므로
+학습자는 폴더에 파일을 넣기만 하면 되고, 직접 쓰는 자리는 주석으로 표시해 두었습니다.
+프로젝트 이름과 겹치는 폴더·파일은 두지 않았습니다 — 몰입 공간 뷰는 `ImmersiveSolarSystem`,
+그 폴더는 `Scenes`입니다.
+
+내려받을 파일은 두 가지입니다. 1·3챕터의 **Project files**는 프로젝트가 든
+`SolarSystem-StartingProject.zip`이고, 2챕터의 **Project files**는 약 300MB인 행성 모델 패키지가 든
+`SolarSystem-Assets.zip`입니다. 앞쪽 zip의 `README.txt`에 폴더 구성과 직접 쓰는 자리가 정리되어 있습니다.
 
 앱을 따라 만들 때는 Xcode 26 이상과 visionOS 26 이상을 사용합니다.
 Apple Vision Pro 실기는 없어도 되며, visionOS 시뮬레이터에서 끝까지 따라갈 수 있습니다.

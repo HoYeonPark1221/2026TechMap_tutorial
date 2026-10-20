@@ -9,8 +9,9 @@ base_path = sys.argv[2].strip("/")
 overrides = Path(__file__).parent / "tutorial-overrides.css"
 target = f"/{base_path}/tutorials/solarsystem/"
 assert (archive / "tutorials/solarsystem/index.html").is_file()
-assert (archive / "tutorials/solarsystem/01-spatiallayout/index.html").is_file()
-assert (archive / "tutorials/solarsystem/02-windowandimmersivespace/index.html").is_file()
+assert (archive / "tutorials/solarsystem/01-projectandassets/index.html").is_file()
+assert (archive / "tutorials/solarsystem/02-spatiallayout/index.html").is_file()
+assert (archive / "tutorials/solarsystem/03-windowandimmersivespace/index.html").is_file()
 downloads = archive / "downloads/org.spatialcomputingtechmap.solarsystemdocs"
 assert (downloads / "SolarSystem-Assets.zip").is_file()
 assert (downloads / "SolarSystem-StartingProject.zip").is_file()
@@ -77,22 +78,23 @@ assert stamps > 0, "no image references to stamp"
 <body><a href="{escape(target, quote=True)}">SolarSystem 튜토리얼 열기</a></body></html>
 """)
 
-# Preserve links shared before the two-chapter edition.
+# Preserve links shared before the three-chapter edition.
 for old, new in {
-    "01-projectsetup": "01-spatiallayout",
-    "01-projectandassets": "01-spatiallayout",
-    "02-placingplanets": "01-spatiallayout",
-    "02-planetentity": "01-spatiallayout",
-    "03-planetinfocards": "01-spatiallayout",
-    "03-focusandpanel": "01-spatiallayout",
-    "03-sunandlighting": "01-spatiallayout",
-    "04-planetsinorbit": "01-spatiallayout",
-    "05-taptofocus": "01-spatiallayout",
-    "06-infopanelandheadplacement": "01-spatiallayout",
-    "07-spatiallayout": "01-spatiallayout",
-    "02-windowandspace": "02-windowandimmersivespace",
-    "04-appentrypoint": "02-windowandimmersivespace",
-    "07-appentrypoint": "02-windowandimmersivespace",
+    "01-projectsetup": "01-projectandassets",
+    "02-placingplanets": "02-spatiallayout",
+    "02-planetentity": "02-spatiallayout",
+    "03-planetinfocards": "02-spatiallayout",
+    "03-focusandpanel": "02-spatiallayout",
+    "03-sunandlighting": "02-spatiallayout",
+    "04-planetsinorbit": "02-spatiallayout",
+    "05-taptofocus": "02-spatiallayout",
+    "06-infopanelandheadplacement": "02-spatiallayout",
+    "07-spatiallayout": "02-spatiallayout",
+    "01-spatiallayout": "02-spatiallayout",
+    "02-windowandspace": "03-windowandimmersivespace",
+    "02-windowandimmersivespace": "03-windowandimmersivespace",
+    "04-appentrypoint": "03-windowandimmersivespace",
+    "07-appentrypoint": "03-windowandimmersivespace",
 }.items():
     destination = f"/{base_path}/tutorials/solarsystem/{new}/"
     assert (archive / f"tutorials/solarsystem/{new}/index.html").is_file()

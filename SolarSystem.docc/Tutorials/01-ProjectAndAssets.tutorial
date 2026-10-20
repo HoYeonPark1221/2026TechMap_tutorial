@@ -1,0 +1,117 @@
+@Tutorial(time: 10, projectFiles: "SolarSystem-StartingProject.zip") {
+    @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
+
+    @Intro(title: "프로젝트와 에셋 준비하기") {
+        프로젝트는 폴더와 파일이 모두 갖춰진 채로 제공됩니다. 모델 패키지 하나만
+        넣으면 바로 빌드됩니다.
+
+        2·3챕터에서 쓸 파일도 이 프로젝트 안에 미리 자리를 잡아 두었습니다.
+    }
+
+    @Section(title: "프로젝트 열기") {
+        @ContentAndMedia {
+            내려받을 파일은 두 개입니다. **Project files**의
+            `SolarSystem-StartingProject.zip`이 프로젝트이고,
+            `SolarSystem-Assets.zip`은 행성 모델 패키지입니다(약 304MB).
+
+            @Image(source: "diagram-asset-bundle.svg", alt: "프로젝트 폴더와 모델 패키지가 따로 들어 있는 모습")
+        }
+
+        @Steps {
+            @Step {
+                두 zip을 모두 내려받아 압축을 풉니다. 에셋 zip은 2챕터 페이지의
+                **Project files**에 있습니다.
+                @Image(source: "diagram-asset-bundle.svg", alt: "압축을 푼 두 폴더")
+            }
+
+            @Step {
+                에셋 zip의 `WorldAssets` 폴더를 프로젝트의 `Packages` 폴더 안으로
+                복사합니다.
+                @Image(source: "diagram-package-location.svg", alt: "Packages 폴더 아래 WorldAssets가 놓인 구조")
+
+                `Packages/WorldAssets/Package.swift`가 되어야 합니다. 프로젝트가 이
+                경로를 이미 참조하고 있어서, 따로 연결할 일은 없습니다.
+            }
+
+            @Step {
+                `SolarSystem.xcodeproj`를 열고 패키지가 해석될 때까지 기다립니다.
+                @Image(source: "xcode-package-linked.png", alt: "패키지가 앱 타깃에 연결된 것을 확인하는 화면")
+
+                `Missing package product 'WorldAssets'`가 뜨면 앞 단계의 경로를
+                확인하세요.
+            }
+
+            @Step {
+                실행 대상을 **Apple Vision Pro 시뮬레이터**로 고르고 **Command + R**로
+                실행합니다. 창에 `Solar System`이라는 글자만 뜨면 정상입니다.
+
+                창을 채우는 일은 2·3챕터에서 합니다.
+            }
+        }
+    }
+
+    @Section(title: "무엇이 들어 있는지 보기") {
+        @ContentAndMedia {
+            폴더는 다섯 개입니다. 앞으로 쓸 파일도 전부 이 안에 있으므로, 새 파일을
+            만들 때는 해당 폴더에 넣기만 하면 됩니다.
+
+            @Image(source: "diagram-assets-folder.svg", alt: "다섯 개 폴더로 나뉜 프로젝트 구조")
+        }
+
+        @Steps {
+            @Step {
+                `Entities`, `Systems`는 RealityKit 쪽입니다. 행성 하나가 공전·자전·축
+                기울기를 동시에 갖도록 빈 엔티티를 층층이 쌓아 둔 구조입니다.
+                @Image(source: "diagram-planet-hierarchy.svg", alt: "orbitPivot에서 rotator까지 이어지는 엔티티 계층")
+            }
+
+            @Step {
+                `RealityViews`는 그 엔티티를 화면에 올리는 뷰, `Scenes`는 창과 몰입
+                공간, `Model`은 상태와 설정값입니다.
+                @Image(source: "diagram-assets-folder.svg", alt: "폴더별 역할")
+
+                이 프로젝트에 `SolarSystem`이라는 **이름의 파일이나 폴더는 없습니다.**
+                프로젝트 이름과 겹쳐 헷갈리므로, 몰입 공간 쪽 뷰는
+                `ImmersiveSolarSystem`, 그 폴더는 `Scenes`로 두었습니다.
+            }
+
+            @Step {
+                직접 쓰는 곳은 비워 두었습니다. 자리마다 몇 챕터에서 채우는지 주석으로
+                적어 두었으니, 프로젝트에서 `2챕터` 또는 `3챕터`로 검색해 보세요.
+
+                새 파일은 `Scenes`에 둘(2챕터) 만듭니다. 이 프로젝트는 동기화 폴더를
+                쓰므로, 폴더에 넣기만 하면 Xcode가 알아서 잡습니다.
+            }
+        }
+    }
+
+    @Assessments {
+        @MultipleChoice {
+            프로젝트의 `Packages` 폴더에 `WorldAssets`를 직접 복사하는 이유는 무엇인가요?
+
+            @Choice(isCorrect: true) {
+                프로젝트가 그 경로를 이미 참조하고 있고, 용량이 커서 프로젝트 zip에 넣지 않았기 때문입니다.
+
+                @Justification(reaction: "맞습니다!") {
+                    행성 모델과 텍스처만 약 300MB입니다. 경로만 맞춰 두면 **Add Local**로 다시 연결할 필요가 없습니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                로컬 패키지는 Xcode에서 열 때마다 다시 추가해야 하기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    한 번 참조해 두면 계속 유지됩니다. 이 프로젝트에는 그 참조가 이미 들어 있습니다.
+                }
+            }
+
+            @Choice(isCorrect: false) {
+                visionOS에서는 모델 파일을 앱 타깃에 직접 넣을 수 없기 때문입니다.
+
+                @Justification(reaction: "다시 시도해 보세요.") {
+                    넣을 수 있습니다. 패키지로 나눈 것은 모델을 따로 관리하기 위해서입니다.
+                }
+            }
+        }
+    }
+}
