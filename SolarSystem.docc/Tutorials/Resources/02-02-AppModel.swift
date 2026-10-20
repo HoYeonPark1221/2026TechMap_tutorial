@@ -6,6 +6,14 @@ import SwiftUI
 class AppModel {
     let immersiveSpaceID = "SolarSystem"
 
+    enum ImmersiveSpaceState {
+        case closed
+        case inTransition
+        case open
+    }
+    var immersiveSpaceState = ImmersiveSpaceState.closed
+    var isShowingSolar: Bool = false
+
     var solarEarth: EarthEntity.Configuration = .solarEarthDefault
     var solarSatellite: SatelliteEntity.Configuration = .solarTelescopeDefault
     var solarMoon: SatelliteEntity.Configuration = .solarMoonDefault
@@ -32,11 +40,23 @@ class AppModel {
 
     var focusedPlanetID: PlanetID? = nil
 
+    var focusedConfiguration: PlanetEntity.Configuration? {
+        guard let focusedPlanetID else { return nil }
+        return solarPlanets.first { $0.id == focusedPlanetID }
+    }
+
     @ObservationIgnored let headTracker = HeadTracker()
 
     let focusDistance: Float = 1.3
 
-    func placeFocusStageInFrontOfViewer(_ stage: Entity) {
+    struct FocusPlacement: Equatable {
+        var yaw: Float = 0
+        var position: SIMD3<Float> = [0, 1.4, -1.6]
+    }
+
+    private(set) var focusPlacement = FocusPlacement()
+
+    func updateFocusPlacement() {
         guard let head = headTracker.headTransform() else { return }
 
         let headPosition = SIMD3<Float>(head.columns.3.x, head.columns.3.y, head.columns.3.z)
@@ -44,28 +64,30 @@ class AppModel {
         guard length(forward) > 0.001 else { return }
         forward = normalize(forward)
 
-        let yaw = atan2(-forward.x, -forward.z)
-        let orientation = simd_quatf(angle: yaw, axis: [0, 1, 0])
-        let right = orientation.act([1, 0, 0])
-
-        let groupLeft = -PlanetEntity.focusDisplayRadius
-        let groupRight = PlanetEntity.focusPanelOffset + PlanetEntity.focusPanelHalfWidth
-        let groupCenter = (groupLeft + groupRight) / 2
-
-        stage.orientation = orientation
-        stage.position = headPosition + forward * focusDistance - right * groupCenter
+        focusPlacement = FocusPlacement(
+            yaw: atan2(-forward.x, -forward.z),
+            position: headPosition + forward * focusDistance)
     }
 
+    static let focusDuration: TimeInterval = 0.6
+    static let focusTransition: Animation = .easeInOut(duration: focusDuration)
+
     func focusNext() {
-        focusedPlanetID = (focusedPlanetID ?? .neptune).next
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = (focusedPlanetID ?? .neptune).next
+        }
     }
 
     func focusPrevious() {
-        focusedPlanetID = (focusedPlanetID ?? .mercury).previous
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = (focusedPlanetID ?? .mercury).previous
+        }
     }
 
     func closeFocus() {
-        focusedPlanetID = nil
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = nil
+        }
     }
 
     let solarSunPosition: SIMD3<Float> = [0, 1.0, -9]

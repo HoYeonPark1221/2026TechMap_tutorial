@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="ZStack은 x와 y 두 축만 정렬하고 SpatialContainer는 Alignment3D로 깊이까지 정렬한다는 비교도">
+  <style>
+    .panel { fill: #1b2431; stroke: #374151; stroke-width: 1.5; rx: 12; }
+    .box { fill: #1e3a5f; stroke: #3b82f6; stroke-width: 1.5; }
+    .plate { fill: #3f2d1e; stroke: #b45309; stroke-width: 1.5; }
+    .axis { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    .guide { stroke: #10b981; stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+    .head { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f9fafb; }
+    .sub { font: 600 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .tag { font: 400 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .ax { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #9ca3af; }
+    .ok { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #10b981; }
+    .note { font: 400 13px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+  </style>
+  <rect x="0" y="0" width="640" height="400" fill="#111827"/>
+
+  <text class="sub" x="24" y="28">같은 자식 두 개를 위에서 내려다본 모습 — 오른쪽이 보는 사람 쪽</text>
+
+  <rect class="panel" x="24" y="48" width="286" height="252"/>
+  <text class="head" x="44" y="78">ZStack</text>
+  <text class="sub" x="44" y="98">정렬 기준 2축 (x, y)</text>
+  <path class="axis" d="M 56 268 L 56 200"/>
+  <path class="axis" d="M 56 268 L 124 268"/>
+  <text class="ax" x="44" y="194">x</text>
+  <text class="ax" x="130" y="272">z</text>
+  <rect class="plate" x="206" y="126" width="12" height="48"/>
+  <text class="tag" x="140" y="154">평면 자식</text>
+  <rect class="box" x="150" y="196" width="62" height="48"/>
+  <text class="tag" x="150" y="262">깊이가 있는 자식</text>
+  <text class="tag" x="44" y="290">z는 겹치는 순서로만 정해집니다</text>
+
+  <rect class="panel" x="330" y="48" width="286" height="252"/>
+  <text class="head" x="350" y="78">SpatialContainer</text>
+  <text class="sub" x="350" y="98">정렬 기준 3축 (Alignment3D)</text>
+  <path class="axis" d="M 362 268 L 362 200"/>
+  <path class="axis" d="M 362 268 L 430 268"/>
+  <text class="ax" x="350" y="194">x</text>
+  <text class="ax" x="436" y="272">z</text>
+  <path class="guide" d="M 487 118 L 487 248"/>
+  <rect class="plate" x="481" y="126" width="12" height="48"/>
+  <text class="tag" x="406" y="154">평면 자식</text>
+  <rect class="box" x="456" y="196" width="62" height="48"/>
+  <text class="tag" x="456" y="262">깊이가 있는 자식</text>
+  <text class="ok" x="350" y="290">.center — 깊이 중심까지 맞습니다</text>
+
+  <text class="note" x="24" y="334">alignment의 기본값은 .center이고, 이 값이 ZStack의 기본 정렬과 같습니다.</text>
+  <text class="note" x="24" y="356">이 앱의 두 자식은 모두 평면(깊이 0)이라 바꿔도 화면은 같습니다.</text>
+  <text class="note" x="24" y="378">깊이가 있는 자식이 들어오는 순간 위 오른쪽처럼 달라집니다.</text>
+</svg>
