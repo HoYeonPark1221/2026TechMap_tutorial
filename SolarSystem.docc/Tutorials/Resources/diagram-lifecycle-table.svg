@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" width="640" height="380" role="img" aria-label="태양계가 나타날 때 onAppear, 보이는 동안 task, 사라질 때 onDisappear에서 각각 무엇을 하는지 정리한 표">
+  <style>
+    .cell { fill: #1b2431; stroke: #374151; stroke-width: 1; }
+    .headcell { fill: #202c3d; stroke: #374151; stroke-width: 1; }
+    .accent { fill: #3f2d1e; stroke: #b45309; stroke-width: 1; }
+    .th { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+    .when { font: 600 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #f9fafb; }
+    .api { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #f59e0b; }
+    .did { font: 400 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #d1d5db; }
+    .title { font: 600 14px -apple-system, BlinkMacSystemFont, sans-serif; fill: #6b7280; }
+    .note { font: 400 12px -apple-system, BlinkMacSystemFont, sans-serif; fill: #9ca3af; }
+  </style>
+  <rect x="0" y="0" width="640" height="380" fill="#111827"/>
+
+  <text class="title" x="24" y="28">몰입 공간이 나타나고 사라질 때 하는 일</text>
+
+  <rect class="headcell" x="24" y="44" width="136" height="34"/>
+  <rect class="headcell" x="160" y="44" width="118" height="34"/>
+  <rect class="headcell" x="278" y="44" width="338" height="34"/>
+  <text class="th" x="36" y="66">언제</text>
+  <text class="th" x="172" y="66">적는 자리</text>
+  <text class="th" x="290" y="66">여기서 하는 일</text>
+
+  <rect class="cell" x="24" y="78" width="136" height="114"/>
+  <rect class="accent" x="160" y="78" width="118" height="114"/>
+  <rect class="cell" x="278" y="78" width="338" height="114"/>
+  <text class="when" x="36" y="100">태양계가</text>
+  <text class="when" x="36" y="118">나타날 때</text>
+  <text class="api" x="172" y="100">.onAppear</text>
+  <text class="did" x="290" y="100">팻말을 “열림”(.open)으로 바꿉니다.</text>
+  <text class="did" x="290" y="120">창에도 “지금 태양계가 보여요”</text>
+  <text class="did" x="290" y="140">(isShowingSolar = true)라고 알려 줍니다.</text>
+  <text class="did" x="290" y="160">화면을 보기 어려운 사람을 위해</text>
+  <text class="did" x="290" y="180">“태양계에 들어왔어요”라고 소리로도 알립니다.</text>
+
+  <rect class="cell" x="24" y="192" width="136" height="56"/>
+  <rect class="accent" x="160" y="192" width="118" height="56"/>
+  <rect class="cell" x="278" y="192" width="338" height="56"/>
+  <text class="when" x="36" y="214">태양계가</text>
+  <text class="when" x="36" y="232">보이는 동안</text>
+  <text class="api" x="172" y="214">.task</text>
+  <text class="did" x="290" y="214">머리가 어디를 향하는지 읽기 시작합니다</text>
+  <text class="did" x="290" y="234">(headTracker.start()).</text>
+
+  <rect class="cell" x="24" y="248" width="136" height="100"/>
+  <rect class="accent" x="160" y="248" width="118" height="100"/>
+  <rect class="cell" x="278" y="248" width="338" height="100"/>
+  <text class="when" x="36" y="270">태양계가</text>
+  <text class="when" x="36" y="288">사라질 때</text>
+  <text class="api" x="172" y="270">.onDisappear</text>
+  <text class="did" x="290" y="270">머리 읽기를 멈춥니다(headTracker.stop()).</text>
+  <text class="did" x="290" y="290">팻말을 “닫힘”(.closed)으로 바꾸고, 창에도</text>
+  <text class="did" x="290" y="310">“이제 안 보여요”(isShowingSolar = false)</text>
+  <text class="did" x="290" y="330">라고 알려 줍니다.</text>
+
+  <text class="note" x="24" y="370">팻말이 immersiveSpaceState입니다. 창과 몰입 공간이 같은 AppModel을 나눠 봅니다.</text>
+</svg>

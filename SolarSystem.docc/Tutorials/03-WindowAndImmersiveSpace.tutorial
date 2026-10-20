@@ -21,8 +21,7 @@
 
         @Steps {
             @Step {
-                `Model/AppModel.swift`를 엽니다. 포커스와 머리 추적 상태는 이미 들어
-                있습니다.
+                `Model/AppModel.swift`를 엽니다.
                 @Code(name: "AppModel.swift", file: "03-01-AppModel.swift")
             }
 
@@ -30,8 +29,13 @@
                 맨 위에 몰입 공간 상태를 더합니다.
                 @Code(name: "AppModel.swift", file: "03-02-AppModel.swift", previousFile: "03-01-AppModel.swift")
 
-                `immersiveSpaceID`는 공간을 열 때와 선언할 때 양쪽이 같은 값을 보게
-                여기에 둡니다.
+                몰입 공간을 열고 닫는 일은 버튼을 누르는 순간 끝나지 않습니다.
+                `openImmersiveSpace`와 `dismissImmersiveSpace`는 `async` 함수라서,
+                호출한 뒤 실제로 공간이 열리거나 닫히기까지 잠깐의 시간이 걸립니다.
+                `inTransition`이 바로 그 "열리는 중 / 닫히는 중"이고, 이 상태일 때 버튼을
+                비활성화하면 사용자가 연달아 눌러 공간을 두 번 열거나 열리는 도중에 닫는
+                요청이 겹치는 일을 막습니다. 상태가 `.closed`와 `.open` 둘뿐이라면,
+                버튼은 아직 끝나지 않은 요청을 알아챌 방법이 없습니다.
             }
         }
     }
@@ -59,15 +63,16 @@
                 @Code(name: "ToggleImmersiveSpaceButton.swift", file: "03-04-ToggleImmersiveSpaceButton.swift", previousFile: "03-03-ToggleImmersiveSpaceButton.swift")
 
                 여닫기가 끝난 뒤 `.open`이나 `.closed`로 바꾸는 코드는 여기 없습니다.
-                공간에 이르는 경로가 버튼 말고도 있어서, 다음 섹션에서 공간 자신이
-                기록하게 합니다.
+                사용자가 Digital Crown으로 공간을 빠져나가는 것처럼, 버튼을 거치지 않고
+                공간이 닫히는 경로도 있기 때문입니다. 그래서 다음 섹션에서 공간에 띄우는
+                `ImmersiveSolarSystem` 뷰의 `onAppear`와 `onDisappear`에서 상태를
+                기록합니다. 단, 열기에 실패하면 공간이 나타나지 않으므로 그때만 버튼이
+                직접 `.closed`로 되돌립니다.
             }
 
             @Step {
-                전환 중에는 버튼을 잠급니다.
+                전환 중에는 `.inTransition`으로 버튼을 잠급니다.
                 @Code(name: "ToggleImmersiveSpaceButton.swift", file: "03-05-ToggleImmersiveSpaceButton.swift", previousFile: "03-04-ToggleImmersiveSpaceButton.swift")
-
-                `.inTransition` 갈래가 `break`만 하는 것은 이 `disabled` 덕분입니다.
             }
         }
     }
@@ -101,10 +106,16 @@
             }
 
             @Step {
-                2챕터에서 만든 `SwitchWindows`에 `isShowingSolar` 배선을 붙입니다.
+                세 자리가 하는 일을 정리하면 이렇습니다.
+                @Image(source: "diagram-lifecycle-table.svg", alt: "onAppear, task, onDisappear에서 각각 무엇을 하는지 정리한 표")
+            }
+
+            @Step {
+                2챕터에서 만든 `SwitchWindows`에 `isShowingSolar` 상태를 연결합니다.
                 @Code(name: "SwitchWindows.swift", file: "03-08-SwitchWindows.swift", previousFile: "02-02-SwitchWindows.swift")
 
-                몰입 공간에 들어가면 컨트롤이, 나오면 소개 카드가 보입니다.
+                몰입 공간에 들어가 있는지에 따라 보여줄 화면을 바꿉니다. 들어가면 컨트롤
+                화면을, 나오면 소개 카드를 보여줍니다.
             }
         }
     }
@@ -140,14 +151,6 @@
 
                 `in: .full`이 허용 집합이라 이 앱의 몰입 공간은 다른 스타일로 바뀌지
                 않습니다.
-            }
-
-            @Step {
-                `Info.plist`의 `UISceneInitialImmersionStyle`은
-                `UIImmersionStyleMixed`입니다. 방금 쓴 `.full`과 달라도 문제가 아닙니다.
-
-                그 키는 공간이 뜨는 첫 순간의 스타일일 뿐이고, 실제 스타일은
-                `immersionStyle(selection:in:)`이 정합니다.
             }
 
             @Step {

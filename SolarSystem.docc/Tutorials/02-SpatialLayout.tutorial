@@ -95,7 +95,7 @@
         @Steps {
             @Step {
                 `RealityViews/PlanetFocusLayout.swift`를 엽니다. `body`만 비어 있습니다.
-                @Code(name: "PlanetFocusLayout.swift", file: "02-05-PlanetFocusLayout.swift")
+                @Code(name: "PlanetFocusLayout.swift", file: "02-05-PlanetFocusLayout.swift", previousFile: "02-05-PlanetFocusLayout-context.swift")
 
                 아래 `show(_:)`가 행성을 포커스 크기로 맞춘 뒤 `visualBounds`로 재어
                 `measured`에 넣습니다. `body`가 쓰는 실측값이 여기서 나옵니다.
@@ -132,27 +132,21 @@
                 두 번째 역할은 그 회전을 레이아웃에 알리는 것입니다.
                 @Image(source: "diagram-rotation3d-layout.svg", alt: "rotation3DEffect는 회전 전 프레임을, rotation3DLayout은 회전한 뷰를 감싸는 상자를 보고한다는 비교도")
 
-                `rotation3DEffect`는 회전 전 프레임을 보고해서 형제 뷰가 기울어진
-                콘텐츠를 비켜 주지 않습니다. 토성 기준으로 예약 반폭이 0.662미터에서
-                0.719미터로 늘어, 창이 5.7센티미터 더 밀려납니다. 겹침을 막는 것은
-                `visualBounds` 실측이고, 기울기 보고는 거기에 여유를 더합니다.
+                `rotation3DEffect`는 기울이기 **전**의 크기를 알려 줍니다. 그래서
+                레이아웃은 똑바로 선 토성만큼만 자리를 비워 두고, 기울어진 고리 끝은 그
+                자리(그림의 점선) 밖으로 삐져나옵니다. `rotation3DLayout`은 기울인
+                **뒤**의 크기를 알려 주므로, 고리 끝까지 다 들어가는 자리를 비워 둡니다.
             }
 
             @Step {
-                SDK 구현에 두 역할이 두 줄로 드러납니다.
-                @Code(name: "SwiftUICore.swiftinterface", file: "rotation3DLayout-implementation.swift")
-
-                그래서 자전축 기울기를 엔티티에서 빼고 SwiftUI로 올렸습니다. RealityKit
-                안에서 돌리면 레이아웃이 그 회전을 알 수 없습니다.
-            }
-
-            @Step {
-                설명 창 쪽에도 확대한 만큼 자리를 잡아 줍니다.
+                설명 창을 키운 만큼 자리도 넓혀 줍니다.
                 @Code(name: "PlanetFocusLayout.swift", file: "02-09-PlanetFocusLayout.swift", previousFile: "02-08-PlanetFocusLayout.swift")
 
-                `scaleEffect`는 겉모습만 키웁니다. 차지하는 자리는 그대로라서 뒤이은
-                `frame`으로 커진 크기를 예약해야 합니다. 앞의 `rotation3DLayout`과 같은
-                구분입니다.
+                `scaleEffect`는 돋보기처럼 보이는 크기만 키우고, 레이아웃이 아는 자리는
+                원래 크기 그대로입니다. 그래서 그대로 두면 커진 패널이 옆의 행성을
+                덮습니다. 뒤이은 `frame`으로 커진 크기만큼 자리를 실제로 확보해야 행성과
+                나란히 섭니다. 앞에서 회전에 `rotation3DEffect` 대신
+                `rotation3DLayout`을 쓴 것과 같은 이유입니다.
             }
 
             @Step {
