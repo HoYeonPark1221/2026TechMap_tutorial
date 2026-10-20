@@ -22,9 +22,10 @@ visionOS 26의 Spatial Layout API로 확대된 행성과 설명 창을 배치하
 프로젝트 이름과 겹치는 폴더·파일은 두지 않았습니다 — 몰입 공간 뷰는 `ImmersiveSolarSystem`,
 그 폴더는 `Scenes`입니다.
 
-내려받을 파일은 두 가지입니다. 1·3챕터의 **Project files**는 프로젝트가 든
-`SolarSystem-StartingProject.zip`이고, 2챕터의 **Project files**는 약 300MB인 행성 모델 패키지가 든
-`SolarSystem-Assets.zip`입니다. 앞쪽 zip의 `README.txt`에 폴더 구성과 직접 쓰는 자리가 정리되어 있습니다.
+내려받을 파일은 두 개이고, 둘 다 1챕터 첫 섹션에서 받습니다. 각 챕터의 **Project files** 버튼이
+프로젝트가 든 `SolarSystem-StartingProject.zip`(약 4MB)이고, 약 305MB인 행성 모델 패키지
+`SolarSystem-Assets.zip`은 릴리스에서 바로 받도록 본문에 링크해 두었습니다.
+프로젝트 zip의 `README.txt`에 폴더 구성과 직접 쓰는 자리가 정리되어 있습니다.
 
 앱을 따라 만들 때는 Xcode 26 이상과 visionOS 26 이상을 사용합니다.
 Apple Vision Pro 실기는 없어도 되며, visionOS 시뮬레이터에서 끝까지 따라갈 수 있습니다.
@@ -41,11 +42,12 @@ DocC 원본은 `SolarSystem.docc`에 있습니다. `main`에 변경을 올리면
 ./scripts/build-docs.sh
 ```
 
-스크립트는 누락된 에셋 ZIP을 이 저장소의 `assets-v2` 릴리스에서 내려받고 `assets.sha256`과 대조한 뒤,
-`.build/SolarSystem.doccarchive`에 정적 웹사이트를 생성합니다. 약 249MB인 에셋 ZIP은 Git 이력 대신 릴리스에 보관합니다.
-문서의 **Project files**에서도 같은 파일을 내려받을 수 있습니다.
+스크립트는 튜토리얼이 가리키는 에셋 릴리스 링크가 살아 있는지 확인한 뒤
+`.build/SolarSystem.doccarchive`에 정적 웹사이트를 생성합니다. 약 305MB인 에셋 ZIP은 사이트로
+다시 게시하지 않고 `assets-v2` 릴리스에서 바로 받게 하므로, 빌드가 그 파일을 내려받지 않습니다.
 
-에셋을 변경하면 릴리스 파일, `assets.sha256`, 필요 시 `scripts/prepare-assets.sh`의 릴리스 태그를 함께 갱신하세요.
+에셋을 교체할 때만 `scripts/prepare-assets.sh`로 릴리스 파일을 내려받아 `assets.sha256`과 대조합니다.
+에셋을 변경하면 릴리스 파일, `assets.sha256`, 필요 시 그 스크립트의 릴리스 태그를 함께 갱신하세요.
 `repository.txt`는 에셋 다운로드 위치와 GitHub Pages의 기본 경로를 결정합니다.
 
 시작 프로젝트 ZIP(`SolarSystem.docc/Tutorials/Resources/SolarSystem-StartingProject.zip`)은 원본 앱의

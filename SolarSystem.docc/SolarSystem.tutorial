@@ -45,9 +45,9 @@
     }
 
     @Resources(title: "자료 내려받기") {
-        1·3챕터의 **Project files**는 프로젝트가 든 `SolarSystem-StartingProject.zip`,
-        2챕터의 **Project files**는 행성 모델이 든 `SolarSystem-Assets.zip`(약 304MB)
-        입니다. 둘 다 1챕터에서 씁니다.
+        내려받을 파일은 두 개이고, 둘 다 1챕터 첫 섹션에서 받습니다. 각 챕터의
+        **Project files**가 프로젝트가 든 `SolarSystem-StartingProject.zip`(약 4MB)
+        이고, 행성 모델 패키지는 [SolarSystem-Assets.zip](https://github.com/Spatial-Computing-TechMap/2026TechMap_tutorial/releases/download/assets-v2/SolarSystem-Assets.zip)입니다(약 305MB).
 
         @Documentation(destination: "https://developer.apple.com/documentation/swiftui/spatialcontainer") {
             공식 문서에서 더 자세한 내용을 볼 수 있습니다.

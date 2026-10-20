@@ -10,17 +10,16 @@
 
     @Section(title: "프로젝트 열기") {
         @ContentAndMedia {
-            내려받을 파일은 두 개입니다. **Project files**의
-            `SolarSystem-StartingProject.zip`이 프로젝트이고,
-            `SolarSystem-Assets.zip`은 행성 모델 패키지입니다(약 304MB).
+            내려받을 파일은 두 개입니다. 위의 **Project files**가 프로젝트이고,
+            행성 모델 패키지는 [SolarSystem-Assets.zip](https://github.com/Spatial-Computing-TechMap/2026TechMap_tutorial/releases/download/assets-v2/SolarSystem-Assets.zip)입니다(약 305MB).
+            둘 다 이 페이지에서 받으세요.
 
             @Image(source: "diagram-asset-bundle.svg", alt: "프로젝트 폴더와 모델 패키지가 따로 들어 있는 모습")
         }
 
         @Steps {
             @Step {
-                두 zip을 모두 내려받아 압축을 풉니다. 에셋 zip은 2챕터 페이지의
-                **Project files**에 있습니다.
+                두 zip을 모두 내려받아 압축을 풉니다.
                 @Image(source: "diagram-asset-bundle.svg", alt: "압축을 푼 두 폴더")
             }
 

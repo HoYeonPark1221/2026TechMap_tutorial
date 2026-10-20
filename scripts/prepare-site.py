@@ -12,8 +12,10 @@ assert (archive / "tutorials/solarsystem/index.html").is_file()
 assert (archive / "tutorials/solarsystem/01-projectandassets/index.html").is_file()
 assert (archive / "tutorials/solarsystem/02-spatiallayout/index.html").is_file()
 assert (archive / "tutorials/solarsystem/03-windowandimmersivespace/index.html").is_file()
+# SolarSystem-Assets.zip is linked straight from its release, not published
+# here: at 305 MB it would double the size of the site for a file GitHub
+# already serves.
 downloads = archive / "downloads/org.spatialcomputingtechmap.solarsystemdocs"
-assert (downloads / "SolarSystem-Assets.zip").is_file()
 assert (downloads / "SolarSystem-StartingProject.zip").is_file()
 (archive / ".nojekyll").touch()
 

@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPOSITORY="$(cat "$REPO_ROOT/repository.txt")"
 BASE_PATH="${REPOSITORY##*/}"
-"$REPO_ROOT/scripts/prepare-assets.sh"
+"$REPO_ROOT/scripts/check-assets-link.sh"
 mkdir -p "$REPO_ROOT/.build"
 xcrun docc convert "$REPO_ROOT/SolarSystem.docc" \
     --output-path "$REPO_ROOT/.build/SolarSystem.doccarchive" \

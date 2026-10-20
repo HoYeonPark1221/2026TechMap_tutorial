@@ -1,4 +1,4 @@
-@Tutorial(time: 30, projectFiles: "SolarSystem-Assets.zip") {
+@Tutorial(time: 30, projectFiles: "SolarSystem-StartingProject.zip") {
     @XcodeRequirement(title: "Xcode 26 이상, visionOS 26 SDK", destination: "https://developer.apple.com/xcode/")
 
     @Intro(title: "Spatial Layout으로 배치하기") {
